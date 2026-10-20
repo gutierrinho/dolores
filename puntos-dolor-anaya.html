@@ -1,0 +1,536 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Puntos de dolor Anaya</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: lista de puntos de dolor a la izquierda; esquema del ecosistema + ficha/simulador a la derecha */
+:root{
+  --bg:#f5f4f9; --surface:#ffffff; --surface-2:#eeedf5; --ink:#1c1a26; --muted:#615f72; --line:#dad8e5;
+  --accent:#6a2fe0;
+  --crit:#c41f3d; --alto:#d4631a; --medio:#a07f00;
+  --c-bq:#7c3aed; --c-yel:#e2b12b; --c-ora:#ea7a2e; --c-blk:#1c1a26; --c-grn:#6aa33a; --c-blu:#2f9ae0; --c-red:#e03131; --c-pink:#d63ec4; --c-ghost:#8a879b;
+  --edge:#2a2834;
+  --f-display:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-body:"Archivo", "Helvetica Neue", Arial, sans-serif;
+  --f-mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111017; --surface:#1a1922; --surface-2:#24222f; --ink:#ecebf4; --muted:#a3a1b4; --line:#2f2d3c;
+  --accent:#a07bff;
+  --crit:#ff5a73; --alto:#ff9447; --medio:#e3bf2e;
+  --c-bq:#a57bff; --c-yel:#e8bd3e; --c-ora:#f58d45; --c-blk:#d6d4e2; --c-grn:#86c252; --c-blu:#55b2f2; --c-red:#ff5555; --c-pink:#ea62d9; --c-ghost:#8d8aa0;
+  --edge:#cfcddc; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111017; --surface:#1a1922; --surface-2:#24222f; --ink:#ecebf4; --muted:#a3a1b4; --line:#2f2d3c;
+  --accent:#a07bff;
+  --crit:#ff5a73; --alto:#ff9447; --medio:#e3bf2e;
+  --c-bq:#a57bff; --c-yel:#e8bd3e; --c-ora:#f58d45; --c-blk:#d6d4e2; --c-grn:#86c252; --c-blu:#55b2f2; --c-red:#ff5555; --c-pink:#ea62d9; --c-ghost:#8d8aa0;
+  --edge:#cfcddc; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+.wrap{max-width:1500px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(1.5rem,2.4vw,2rem);letter-spacing:-.02em;margin:0;line-height:1.1;text-wrap:balance}
+.sub{color:var(--muted);margin:.3rem 0 0;max-width:70ch}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.summary{display:flex;gap:8px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--surface-2);white-space:nowrap}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.sev-crit{--sev:var(--crit)} .sev-alto{--sev:var(--alto)} .sev-medio{--sev:var(--medio)}
+.dot{background:var(--sev)}
+
+.app{display:grid;grid-template-columns:minmax(260px,330px) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:900px){.app{grid-template-columns:1fr}}
+
+/* lista */
+aside{display:flex;flex-direction:column;gap:10px;min-width:0}
+.list-head{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:28px}
+.nodechip{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;padding:3px 4px 3px 10px;border-radius:999px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--ink)}
+.nodechip button{border:0;background:transparent;color:inherit;cursor:pointer;font-size:1rem;line-height:1;padding:0 6px;border-radius:50%}
+.cards{display:flex;flex-direction:column;gap:8px}
+.card{all:unset;box-sizing:border-box;display:grid;grid-template-columns:4px 1fr;gap:0 12px;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 12px 12px 0;transition:border-color .15s,transform .15s}
+.card:hover{border-color:color-mix(in srgb,var(--sev) 60%,var(--line))}
+.card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.card[aria-pressed="true"]{border-color:var(--sev);box-shadow:0 0 0 1px var(--sev)}
+.card .stripe{background:var(--sev);border-radius:0 3px 3px 0;grid-row:1/4}
+.card .t{font-weight:700;font-size:.95rem;line-height:1.3}
+.card .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;align-items:center}
+.tag{font-family:var(--f-mono);font-size:.68rem;padding:1px 6px;border-radius:4px;background:var(--surface-2);color:var(--muted)}
+.sevtag{font-size:.72rem;font-weight:700;color:var(--sev);text-transform:uppercase;letter-spacing:.05em}
+.empty{padding:16px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:.9rem}
+
+/* zona principal */
+main{display:flex;flex-direction:column;gap:12px;min-width:0}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between}
+.seg{display:inline-flex;background:var(--surface-2);border-radius:9px;padding:3px;gap:2px}
+.seg button,.phases button{border:0;background:transparent;color:var(--muted);font:600 .82rem var(--f-body);padding:6px 12px;border-radius:7px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.phases{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.phases button{border:1px solid var(--line);padding:4px 10px;font-size:.78rem}
+.phases button[aria-pressed="true"]{border-color:var(--accent);color:var(--ink);background:color-mix(in srgb,var(--accent) 12%,transparent)}
+.seg button:focus-visible,.phases button:focus-visible,.player button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow-x:auto;position:relative}
+.stage svg{display:block;width:100%;min-width:760px;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.76rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend svg{flex:none}
+
+/* SVG */
+.node rect.body{fill:var(--surface);stroke:var(--nc);stroke-width:5;transition:fill .25s,opacity .25s}
+.node.big rect.body{stroke-width:7}
+.node text{fill:var(--ink);font-family:var(--f-body);font-weight:500;pointer-events:none}
+.node{cursor:pointer;transition:opacity .25s}
+.node:focus{outline:none}
+.node:focus-visible rect.body{stroke-dasharray:10 6}
+.node rect.halo{fill:none;stroke:var(--sev,transparent);stroke-width:0;opacity:0;transition:opacity .25s}
+.node .badge{opacity:1;transition:opacity .2s}
+.node .badge circle{fill:var(--ink)}
+.node .badge text{fill:var(--surface);font-family:var(--f-mono);font-weight:500;font-size:22px}
+.node.ghost rect.body{stroke:var(--c-ghost);stroke-dasharray:10 7;stroke-width:3;fill:var(--surface-2)}
+.node.ghost text{fill:var(--muted);font-style:italic}
+.node.ghost{display:none}
+svg.sel .node.ghost.context,svg.sel .node.ghost.primary{display:inline}
+
+.edge path{fill:none;stroke:var(--edge);stroke-width:5;stroke-linecap:round;transition:opacity .25s,stroke .25s}
+.edge.dot path{stroke-dasharray:0 12;stroke-width:6}
+.edge.red path{stroke:var(--c-red)} .edge.red polygon{fill:var(--c-red)}
+.edge.green path{stroke:var(--c-grn);stroke-width:3} .edge.green polygon{fill:var(--c-grn)}
+.edge polygon{fill:var(--edge);transition:opacity .25s}
+.edge.ghost{display:none}
+.edge.ghost path{stroke:var(--c-ghost);stroke-dasharray:3 9;stroke-width:4}
+.edge.ghost polygon{fill:var(--c-ghost)}
+
+svg.sel .node{opacity:.16}
+svg.sel .edge{opacity:.1}
+svg.sel .node.primary,svg.sel .node.context{opacity:1}
+svg.sel .node.primary rect.body{fill:color-mix(in srgb,var(--sev) 16%,var(--surface))}
+svg.sel .node.primary rect.halo{stroke-width:4;opacity:.9}
+svg.sel .node.context rect.body{stroke-dasharray:14 8}
+svg.sel .node .badge{opacity:0}
+svg.sel .edge.on{opacity:.75}
+svg.sel .edge.ghost.on{display:inline}
+svg.sel .edge.flow{opacity:1}
+svg.sel .edge.flow path{stroke:var(--sev);stroke-dasharray:16 12;stroke-width:6;animation:dash 0.9s linear infinite}
+svg.sel .edge.flow polygon{fill:var(--sev)}
+svg.sel .node.step rect.body{stroke-width:9}
+svg.sel .node.primary.step rect.body{fill:color-mix(in srgb,var(--sev) 30%,var(--surface))}
+@keyframes dash{to{stroke-dashoffset:-28}}
+.pulse{fill:var(--sev);pointer-events:none}
+
+svg.heat .node:not(.ghost) rect.body{fill:color-mix(in srgb,var(--crit) var(--heat,0%),var(--surface))}
+svg.heat .edge{opacity:.25}
+svg.heat .node.zero{opacity:.35}
+svg.focusnode .node.nodefocus rect.body{stroke-width:10}
+
+/* ficha */
+.detail{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px 28px}
+@media (max-width:1100px){.detail{grid-template-columns:1fr}}
+.detail h2{font-family:var(--f-display);font-size:1.3rem;font-weight:800;letter-spacing:-.01em;margin:4px 0 8px;line-height:1.2;text-wrap:balance}
+.detail h3{font-size:.72rem;font-family:var(--f-mono);font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 4px}
+.detail p{margin:0;max-width:68ch}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.8rem;font-weight:600;padding:3px 9px;border-radius:6px;border:2px solid var(--nc);background:var(--surface)}
+.chip.ctx{border-style:dashed;font-weight:500;color:var(--muted)}
+.sevbig{display:inline-flex;align-items:center;gap:8px;font-weight:800;color:var(--sev);text-transform:uppercase;letter-spacing:.06em;font-size:.8rem}
+.sevbig .bar{display:inline-flex;gap:3px}
+.sevbig .bar i{width:14px;height:6px;border-radius:2px;background:var(--surface-2)}
+.sevbig .bar i.on{background:var(--sev)}
+
+.player{display:flex;flex-direction:column;gap:12px;background:var(--surface-2);border-radius:10px;padding:14px}
+.player .ctrls{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.player button{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 .82rem var(--f-body);padding:6px 12px;border-radius:7px;cursor:pointer}
+.player button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.player button:disabled{opacity:.4;cursor:default}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;counter-reset:s}
+.steps li{display:grid;grid-template-columns:26px 1fr;gap:8px;padding:7px 8px;border-radius:7px;cursor:pointer;font-size:.88rem;color:var(--muted);line-height:1.4}
+.steps li::before{counter-increment:s;content:counter(s);font-family:var(--f-mono);font-size:.75rem;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);background:var(--surface)}
+.steps li.cur{background:var(--surface);color:var(--ink);box-shadow:inset 3px 0 0 var(--sev)}
+.steps li.cur::before{background:var(--sev);border-color:var(--sev);color:#fff}
+.steps li:focus-visible{outline:2px solid var(--accent)}
+
+table.rank{width:100%;border-collapse:collapse;font-size:.86rem;font-variant-numeric:tabular-nums}
+table.rank td,table.rank th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+table.rank th{font-family:var(--f-mono);font-weight:500;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+table.rank .barc{width:40%}
+table.rank .b{height:8px;border-radius:4px;background:var(--crit)}
+table.rank tr{cursor:pointer}
+table.rank tr:hover td{background:var(--surface-2)}
+.note{font-size:.8rem;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){svg.sel .edge.flow path{animation:none}.pulse{display:none}}
+</style>
+</head><body>
+
+<div class="wrap">
+  <header>
+    <div>
+      <div class="eyebrow">Ecosistema Anaya · simulador</div>
+      <h1>Puntos de dolor del ecosistema</h1>
+      <p class="sub">Elige un punto de dolor para ver qué elementos del esquema implica y reproducir, paso a paso, el recorrido donde se produce el problema.</p>
+    </div>
+    <div class="summary" id="summary"></div>
+  </header>
+
+  <div class="app">
+    <aside>
+      <div class="list-head"><span class="eyebrow" id="listcount">Puntos de dolor</span><span id="nodefilter"></span></div>
+      <div class="cards" id="cards"></div>
+    </aside>
+
+    <main>
+      <div class="toolbar">
+        <div class="seg" role="group" aria-label="Vista">
+          <button id="m-dolor" aria-pressed="true">Por punto de dolor</button>
+          <button id="m-calor" aria-pressed="false">Mapa de calor</button>
+        </div>
+        <div class="phases" id="phases" role="group" aria-label="Filtrar por fase"></div>
+      </div>
+      <div class="stage"><svg id="map" viewBox="0 0 1760 1190" role="img" aria-label="Esquema del ecosistema Anaya"></svg></div>
+      <div class="legend">
+        <span><svg width="34" height="10"><line x1="2" y1="5" x2="32" y2="5" stroke="var(--edge)" stroke-width="3" stroke-linecap="round"/></svg>Conexión continua</span>
+        <span><svg width="34" height="10"><line x1="3" y1="5" x2="32" y2="5" stroke="var(--edge)" stroke-width="4" stroke-dasharray="0 7" stroke-linecap="round"/></svg>Conexión punteada</span>
+        <span><svg width="34" height="14"><rect x="2" y="2" width="30" height="10" rx="5" fill="var(--surface)" stroke="var(--crit)" stroke-width="2"/></svg>Implicado según el documento</span>
+        <span><svg width="34" height="14"><rect x="2" y="2" width="30" height="10" rx="5" fill="var(--surface)" stroke="var(--muted)" stroke-width="2" stroke-dasharray="4 3"/></svg>Contexto del flujo</span>
+        <span><svg width="34" height="14"><rect x="2" y="2" width="30" height="10" rx="5" fill="var(--surface-2)" stroke="var(--c-ghost)" stroke-width="2" stroke-dasharray="3 3"/></svg>Fuera del esquema (Excel, Power BI…)</span>
+      </div>
+      <section class="detail" id="detail" aria-live="polite"></section>
+    </main>
+  </div>
+</div>
+
+<script>
+(function(){
+const NODES = {
+  genially:{x:140,y:213,w:210,h:98,c:'--c-pink',l:'Genially',fs:30},
+  dambq:{x:548,y:227,w:235,h:82,c:'--c-bq',l:'DAM (BQ)',fs:28},
+  ha:{x:545,y:413,w:445,h:158,c:'--c-bq',l:'Herramienta\nautora (BQ)',fs:38,big:1,short:'Herramienta autora (HA)'},
+  dist:{x:1102,y:360,w:340,h:120,c:'--c-yel',l:'Distribuidor\ndigital',fs:32},
+  ccaa:{x:922,y:144,w:338,h:120,c:'--c-ora',l:'Plataforma\nCCAA/colegio',fs:31},
+  otros:{x:1305,y:151,w:358,h:134,c:'--c-ora',l:'Otros (cliente\nfinal, familia,\nacademia…)',fs:31},
+  beta:{x:1590,y:358,w:276,h:130,c:'--c-yel',l:'BETA',fs:32},
+  garec:{x:1592,y:553,w:222,h:78,c:'--c-yel',l:'GA Recursos',fs:27},
+  oracle:{x:1012,y:629,w:236,h:84,c:'--c-blk',l:'ORACLE',fs:28},
+  sf:{x:1288,y:628,w:234,h:82,c:'--c-blk',l:'Salesforce +\nMylead',fs:27},
+  ola:{x:1370,y:820,w:488,h:172,c:'--c-bq',l:'OLA\nLMS',fs:44,big:1,short:'OLA LMS'},
+  gen:{x:1370,y:1045,w:326,h:156,c:'--c-bq',l:'Generador\nevaluaciones y\nfichas (BQ)',fs:31,big:1,short:'Generador evaluaciones y fichas'},
+  nexus:{x:372,y:613,w:228,h:80,c:'--c-grn',l:'DAM (Nexus)',fs:28},
+  mem:{x:118,y:737,w:156,h:78,c:'--c-yel',l:'MEM',fs:28},
+  a2r:{x:463,y:863,w:164,h:98,c:'--c-blu',l:'A2R',fs:32},
+  gade:{x:765,y:983,w:270,h:96,c:'--c-yel',l:'GADE\n(contenido)',fs:31},
+  prog:{x:310,y:1070,w:338,h:120,c:'--c-red',l:'Programaciones IA\n(1MillionBot)',fs:31,short:'Programaciones IA (1MillionBot)'},
+  // elementos que no aparecen en el esquema pero sí en el documento
+  excel:{x:330,y:72,w:200,h:62,c:'--c-ghost',l:'Excel (cargas)',fs:25,ghost:1},
+  servidor:{x:640,y:72,w:250,h:62,c:'--c-ghost',l:'Servidor de recursos',fs:25,ghost:1},
+  vimeo:{x:92,y:520,w:132,h:58,c:'--c-ghost',l:'Vimeo',fs:25,ghost:1},
+  powerbi:{x:700,y:1140,w:170,h:58,c:'--c-ghost',l:'Power BI',fs:25,ghost:1},
+  teams:{x:985,y:1140,w:300,h:58,c:'--c-ghost',l:'Teams · Excel seguim.',fs:25,ghost:1},
+  blink:{x:1625,y:692,w:150,h:58,c:'--c-ghost',l:'Blink',fs:25,ghost:1}
+};
+const EDGES = {
+  e_dambq_ha:{a:'dambq',b:'ha',arrow:'end'},
+  e_gen_ha:{a:'genially',b:'ha',dot:1,arrow:'end'},
+  e_mem_ha:{a:'mem',b:'ha',dot:1,arrow:'end'},
+  e_ha_dist:{a:'ha',b:'dist',arrow:'end'},
+  e_dist_ccaa:{a:'dist',b:'ccaa',arrow:'end'},
+  e_dist_otros:{a:'dist',b:'otros',arrow:'end'},
+  e_dist_beta:{a:'dist',b:'beta',arrow:'end'},
+  e_garec_beta:{a:'garec',b:'beta',arrow:'end'},
+  e_oracle_dist:{a:'oracle',b:'dist',arrow:'end'},
+  e_sf_dist:{a:'sf',b:'dist',arrow:'end',color:'red'},
+  e_ha_ola:{a:'ha',b:'ola',arrow:'both'},
+  e_gen_ola:{a:'gen',b:'ola',arrow:'end'},
+  e_nexus_ha:{a:'nexus',b:'ha',dot:1,arrow:'end'},
+  e_nexus_a2r:{a:'nexus',b:'a2r',dot:1,arrow:'both'},
+  e_a2r_mem:{a:'a2r',b:'mem',dot:1,arrow:'end'},
+  e_prog_mem:{a:'prog',b:'mem',dot:1,arrow:'end'},
+  e_prog_ha:{a:'prog',b:'ha',arrow:'end',color:'green',c1:[300,850],c2:[545,640]},
+  e_gade_a2r:{a:'gade',b:'a2r',dot:1,arrow:'end'},
+  e_gade_ha:{a:'gade',b:'ha',dot:1,arrow:'end'},
+  e_gade_prog:{a:'gade',b:'prog',arrow:'end'},
+  g_excel_ha:{a:'excel',b:'ha',ghost:1,arrow:'end'},
+  g_excel_ola:{a:'excel',b:'ola',ghost:1,arrow:'end',c1:[900,40],c2:[1240,500]},
+  g_serv_dambq:{a:'servidor',b:'dambq',ghost:1,arrow:'end'},
+  g_ha_teams:{a:'ha',b:'teams',ghost:1,arrow:'end',c1:[820,700],c2:[960,900]},
+  g_ola_teams:{a:'ola',b:'teams',ghost:1,arrow:'end'},
+  g_teams_pbi:{a:'teams',b:'powerbi',ghost:1,arrow:'end'},
+  g_mem_vimeo:{a:'mem',b:'vimeo',ghost:1,arrow:'end'},
+  g_vimeo_ha:{a:'vimeo',b:'ha',ghost:1,arrow:'end',c1:[160,380],c2:[260,330]},
+  g_gade_nexus:{a:'gade',b:'nexus',ghost:1,arrow:'both',c1:[640,820],c2:[480,700]},
+  g_blink_ola:{a:'blink',b:'ola',ghost:1,arrow:'end'}
+};
+
+const PHASES = {
+  1:'Conceptualización de campaña y plan editorial',
+  2:'Creación de contenidos, reutilización, adaptación, producción nueva y empaquetado digital',
+  3:'Distribución y puesta a disposición en plataformas',
+  4:'Consumo en aula, seguimiento y atención a usuarios'
+};
+const SEV = {crit:{l:'Crítico',w:3},alto:{l:'Alto',w:2},medio:{l:'Medio',w:1}};
+
+const PAINS = [
+ {id:'p1',t:'Herramientas de terceros no conectadas por API',sev:'alto',ph:[2],
+  d:'Procesos clave como la generación de programaciones, actividades y presentaciones, la traducción o la implementación de accesibilidad se hacen con herramientas de terceros.',
+  why:'Complejiza y alarga los flujos e incrementa los recursos destinados a su gestión.',
+  nodes:['prog','a2r','genially','ha','ola'],ctx:['mem','nexus','gade'],
+  steps:[
+   {e:['e_gade_prog','e_prog_ha'],t:'Las programaciones se generan en 1MillionBot a partir del contenido de GADE y llegan a la Herramienta autora sin conexión por API.'},
+   {e:['e_gen_ha'],t:'Presentaciones y actividades interactivas se producen en Genially y se incorporan a mano en la Herramienta autora.'},
+   {e:['e_nexus_a2r','e_a2r_mem','e_nexus_ha','e_mem_ha'],t:'Traducción y accesibilidad pasan por A2R, fuera del flujo: el resultado vuelve a Nexus o MEM antes de llegar a la HA.'},
+   {e:['e_ha_ola'],t:'El producto llega al LMS arrastrando cada paso manual anterior: más tiempo y más recursos de gestión.'}
+  ]},
+ {id:'p2',t:'Procesos complejos para resolver necesidades concretas',sev:'crit',ph:[1,2],
+  d:'Despliegue de flujos complejos: diamantes generados a partir de metadatos en Excel; almacenamiento transitorio en servidores de recursos antes de la ingesta en el DAM de la HA; accesibilidad de fotografías e ilustraciones compradas vía A2R antes de guardarlas en Nexus.',
+  why:'Complejiza y alarga los flujos e incrementa los recursos destinados a su gestión.',
+  nodes:['a2r','nexus','ha'],ctx:['excel','servidor','dambq'],
+  steps:[
+   {e:['g_excel_ha'],t:'Los diamantes se generan a partir de los metadatos de un Excel.'},
+   {e:['g_serv_dambq','e_dambq_ha'],t:'Los recursos esperan en servidores de recursos antes de entrar en el DAM de la Herramienta autora.'},
+   {e:['e_nexus_a2r'],t:'Fotografías e ilustraciones compradas pasan por A2R para incorporar la accesibilidad y se guardan después en Nexus.'},
+   {e:['e_nexus_ha'],t:'Solo entonces llegan desde Nexus a la Herramienta autora.'}
+  ]},
+ {id:'p3',t:'Uso sistemático de Excel para incorporar datos',sev:'crit',ph:[2],
+  d:'Se usa Excel para incorporar contenidos y datos al ecosistema: subidas de recursos, cargas de metadatos…',
+  why:'Inestabilidad del fichero fuente de datos y riesgo de errores por el ingreso manual de la información.',
+  nodes:['ha','ola','powerbi','teams'],ctx:['excel'],
+  steps:[
+   {e:[],f:['excel'],t:'Subidas de recursos y cargas de metadatos se preparan en hojas Excel.'},
+   {e:['g_excel_ha'],t:'Los datos entran a mano en la Herramienta autora…'},
+   {e:['g_excel_ola'],t:'…y también en el LMS.'},
+   {e:['g_teams_pbi'],t:'Los Excel de seguimiento alojados en Teams alimentan Power BI. Un error de tecleo en origen se propaga a todo lo que depende del fichero.'}
+  ]},
+ {id:'p4',t:'Contenido base generado y guardado fuera del ecosistema',sev:'alto',ph:[1,2],
+  d:'Los activos base de productos impresos y digitales se generan y archivan fuera del flujo del producto digital: textos en GADE (traducciones vía A2R vuelven a GADE), fotografías en Nexus, ilustraciones entre GADE y Nexus, vídeos con original en MEM y distribución desde Vimeo, audios en MEM y programaciones generadas en OMB que viajan a MEM.',
+  why:'Contenido base “secuestrado” en ficheros sin metadatos. Difícil de recuperar y reutilizar.',
+  nodes:['gade','ha','ola','mem','nexus'],ctx:['a2r','prog','vimeo'],
+  steps:[
+   {e:['e_gade_a2r'],t:'Los textos base viven en GADE; las traducciones salen a A2R y se vuelven a guardar en GADE.'},
+   {e:['g_gade_nexus','e_nexus_ha'],t:'Las fotografías están en Nexus y las ilustraciones a caballo entre GADE y Nexus.'},
+   {e:['g_mem_vimeo','g_vimeo_ha','e_mem_ha'],t:'Vídeos: original en MEM, distribución desde Vimeo. Audios: original en MEM.'},
+   {e:['e_prog_mem','e_mem_ha'],t:'Las programaciones generadas en 1MillionBot viajan a MEM, desde donde se suben.'},
+   {e:['e_gade_ha','e_ha_ola'],t:'Todo llega a HA y LMS como ficheros sin metadatos: recuperar y reutilizar ese contenido base es costoso.'}
+  ]},
+ {id:'p5',t:'Limitaciones de las herramientas de gestión (Oracle)',sev:'alto',ph:[1,3],
+  d:'Ingeniería obsoleta de Oracle.',
+  why:'Complica el licenciamiento digital. Cada vez surgen más oportunidades fuera de las reglas de negocio del sistema: apertura a LATAM, venta en academias o a usuarios no perfilados.',
+  nodes:['oracle','sf','ha','ola'],ctx:['dist','ccaa','otros'],
+  steps:[
+   {e:['e_oracle_dist'],t:'Oracle, con ingeniería obsoleta, alimenta las reglas de licenciamiento del distribuidor digital.'},
+   {e:['e_sf_dist'],t:'Salesforce + Mylead aporta la información comercial al distribuidor.'},
+   {e:['e_ha_dist','e_ha_ola'],t:'Los productos de la Herramienta autora y del LMS salen a través del distribuidor.'},
+   {e:['e_dist_ccaa','e_dist_otros'],t:'Las reglas actuales sirven a plataformas CCAA y colegios, pero no cubren nuevos canales: LATAM, academias, usuarios no perfilados.'}
+  ]},
+ {id:'p6',t:'Uso sistemático de Excel en el seguimiento',sev:'crit',ph:[1,2],
+  d:'El seguimiento de la generación de recursos y del montaje de productos digitales se hace con Excel que reportan a Power BI.',
+  why:'Inestabilidad del fichero fuente de datos y riesgo de errores por el ingreso manual de la información.',
+  nodes:['ha','ola','powerbi','teams'],ctx:[],
+  steps:[
+   {e:['g_ha_teams'],t:'El avance en la generación de recursos se anota a mano en Excel alojados en Teams.'},
+   {e:['g_ola_teams'],t:'El montaje de los productos digitales en el LMS, también.'},
+   {e:['g_teams_pbi'],t:'Power BI lee esos Excel: si el fichero se rompe o tiene errores, el informe hereda el fallo.'}
+  ]},
+ {id:'p7',t:'Retraso del ecosistema como distribuidor de contenidos de terceros',sev:'medio',ph:[3],
+  d:'La acumulación de tareas priorizadas para el año 2 impide acelerar el proceso. Ese año incluso sería arriesgado abandonar BETA, porque el ecosistema aún no estará estabilizado.',
+  why:'Retraso en la tracción de usuarios desde Blink.',
+  nodes:['ola','beta','garec'],ctx:['dist','blink'],
+  steps:[
+   {e:['e_garec_beta','e_dist_beta'],t:'GA Recursos y el distribuidor siguen dependiendo de BETA.'},
+   {e:[],f:['beta','ola'],t:'Las tareas priorizadas para el año 2 impiden acelerar el paso a OLA LMS; abandonar BETA ese año sería arriesgado.'},
+   {e:['g_blink_ola'],t:'Consecuencia: se retrasa la llegada de usuarios desde Blink al LMS.'}
+  ]}
+];
+
+const NS='http://www.w3.org/2000/svg';
+const svg=document.getElementById('map');
+const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
+const label=n=>n.short||n.l.replace(/\n/g,' ');
+
+function inside(n,x,y){const r=n.h/2,px=Math.abs(x-n.x),py=Math.abs(y-n.y),hw=n.w/2-r;
+  if(px<=hw)return py<=n.h/2; return (px-hw)**2+py**2<=r*r;}
+function boundary(n,tx,ty,pad=6){let lo=0,hi=1;
+  for(let i=0;i<30;i++){const m=(lo+hi)/2;inside(n,n.x+(tx-n.x)*m,n.y+(ty-n.y)*m)?lo=m:hi=m;}
+  const dx=tx-n.x,dy=ty-n.y,L=Math.hypot(dx,dy)||1;
+  return [n.x+dx*lo+dx/L*pad,n.y+dy*lo+dy/L*pad];}
+function arrow(p,from,g){const dx=p[0]-from[0],dy=p[1]-from[1],L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L,len=22,w=11;
+  el('polygon',{points:`${p[0]},${p[1]} ${p[0]-ux*len-uy*w},${p[1]-uy*len+ux*w} ${p[0]-ux*len+uy*w},${p[1]-uy*len-ux*w}`},g);}
+
+const gE=el('g',{},svg), gN=el('g',{},svg), gP=el('g',{},svg);
+const edgeEls={}, nodeEls={};
+for(const id in EDGES){const e=EDGES[id],A=NODES[e.a],B=NODES[e.b];
+  const g=el('g',{class:'edge'+(e.dot?' dot':'')+(e.ghost?' ghost':'')+(e.color?' '+e.color:'')},gE);
+  let s,t,d,fromS,fromT;
+  if(e.c1){s=boundary(A,e.c1[0],e.c1[1]);t=boundary(B,e.c2[0],e.c2[1]);d=`M${s} C${e.c1} ${e.c2} ${t}`;fromT=e.c2;fromS=e.c1;}
+  else{s=boundary(A,B.x,B.y);t=boundary(B,A.x,A.y);d=`M${s} L${t}`;fromT=s;fromS=t;}
+  const p=el('path',{d},g);
+  if(e.arrow!=='none')arrow(t,fromT,g);
+  if(e.arrow==='both')arrow(s,fromS,g);
+  edgeEls[id]={g,p};
+}
+for(const id in NODES){const n=NODES[id];
+  const g=el('g',{class:'node'+(n.big?' big':'')+(n.ghost?' ghost':''),tabindex:n.ghost?-1:0,role:'button','aria-label':label(n),style:`--nc:var(${n.c})`},gN);
+  el('rect',{class:'halo',x:n.x-n.w/2-12,y:n.y-n.h/2-12,width:n.w+24,height:n.h+24,rx:(n.h+24)/2},g);
+  el('rect',{class:'body',x:n.x-n.w/2,y:n.y-n.h/2,width:n.w,height:n.h,rx:n.h/2},g);
+  const lines=n.l.split('\n'),lh=n.fs*1.18,y0=n.y-(lines.length-1)*lh/2+n.fs*0.35;
+  const tx=el('text',{'text-anchor':'middle','font-size':n.fs},g);
+  lines.forEach((l,i)=>{const ts=el('tspan',{x:n.x,y:y0+i*lh},tx);ts.textContent=l;});
+  const b=el('g',{class:'badge'},g);
+  const bx=n.x+n.w/2-n.h*0.18,by=n.y-n.h/2+4;
+  el('circle',{cx:bx,cy:by,r:19},b);const bt=el('text',{x:bx,y:by+7.5,'text-anchor':'middle'},b);
+  nodeEls[id]={g,bt,b};
+  if(!n.ghost){g.addEventListener('click',()=>toggleNode(id));
+    g.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();toggleNode(id);}});}
+}
+
+// ---- estado
+const S={mode:'dolor',sel:null,step:-1,phase:null,node:null,playing:false,timer:null};
+try{const h=location.hash.slice(1);if(PAINS.some(p=>p.id===h))S.sel=h;}catch(e){}
+
+const visible=()=>PAINS.filter(p=>(!S.phase||p.ph.includes(S.phase))&&(!S.node||p.nodes.includes(S.node)||p.ctx.includes(S.node)));
+const pain=()=>PAINS.find(p=>p.id===S.sel);
+
+// resumen
+const sum=document.getElementById('summary');
+['crit','alto','medio'].forEach(k=>{const c=PAINS.filter(p=>p.sev===k).length;
+  const s=document.createElement('span');s.className='pill sev-'+k;s.innerHTML=`<span class="dot"></span>${c} ${SEV[k].l.toLowerCase()}${c>1?'s':''}`;sum.appendChild(s);});
+
+// fases
+const ph=document.getElementById('phases');
+const mkPh=(v,t,title)=>{const b=document.createElement('button');b.textContent=t;b.title=title||'';b.setAttribute('aria-pressed',String(S.phase===v));
+  b.onclick=()=>{S.phase=v;if(S.sel&&!visible().some(p=>p.id===S.sel))select(null);render();};ph.appendChild(b);};
+function renderPhases(){ph.innerHTML='<span class="eyebrow" style="margin-right:4px">Fase</span>';mkPh(null,'Todas');[1,2,3,4].forEach(i=>mkPh(i,String(i),PHASES[i]));}
+
+document.getElementById('m-dolor').onclick=()=>{S.mode='dolor';render();};
+document.getElementById('m-calor').onclick=()=>{S.mode='calor';stop();render();};
+
+function toggleNode(id){S.node=S.node===id?null:id;if(S.sel&&!visible().some(p=>p.id===S.sel))select(null);render();}
+function select(id){stop();S.sel=id;S.step=-1;if(id)S.mode='dolor';}
+
+function stop(){S.playing=false;clearTimeout(S.timer);}
+function play(){const p=pain();if(!p)return;S.playing=true;
+  if(S.step>=p.steps.length-1)S.step=-1;
+  const tick=()=>{if(!S.playing)return;S.step++;render();
+    if(S.step<p.steps.length-1)S.timer=setTimeout(tick,3200);else{S.playing=false;render();}};
+  tick();}
+
+// ---- render
+function renderCards(){
+  const list=visible(),box=document.getElementById('cards');box.innerHTML='';
+  document.getElementById('listcount').textContent=`${list.length} de ${PAINS.length} puntos de dolor`;
+  const nf=document.getElementById('nodefilter');nf.innerHTML='';
+  if(S.node){const c=document.createElement('span');c.className='nodechip';c.textContent=label(NODES[S.node]);
+    const x=document.createElement('button');x.textContent='×';x.setAttribute('aria-label','Quitar filtro');x.onclick=()=>{S.node=null;render();};c.appendChild(x);nf.appendChild(c);}
+  if(!list.length){const e=document.createElement('div');e.className='empty';
+    e.textContent=S.phase===4&&!S.node?'El documento todavía no recoge puntos de dolor para la fase 4 (consumo en aula, seguimiento y atención a usuarios).':'Ningún punto de dolor coincide con este filtro.';box.appendChild(e);return;}
+  list.forEach(p=>{const b=document.createElement('button');b.className='card sev-'+p.sev;b.setAttribute('aria-pressed',String(S.sel===p.id));
+    b.innerHTML=`<span class="stripe"></span><span class="t"></span><span class="meta"><span class="sevtag">${SEV[p.sev].l}</span>${p.ph.map(f=>`<span class="tag">Fase ${f}</span>`).join('')}<span class="tag">${p.nodes.length} elem.</span></span>`;
+    b.querySelector('.t').textContent=p.t;
+    b.onclick=()=>{select(S.sel===p.id?null:p.id);render();};box.appendChild(b);});
+}
+
+function renderMap(){
+  const p=S.mode==='dolor'?pain():null;
+  svg.setAttribute('class',(p?'sel sev-'+p.sev:'')+(S.mode==='calor'?' heat':'')+(S.node?' focusnode':''));
+  const allE=new Set(),stepE=new Set(),stepN=new Set();
+  if(p){p.steps.forEach(s=>s.e.forEach(x=>allE.add(x)));
+    const cur=p.steps[S.step];if(cur){cur.e.forEach(x=>{stepE.add(x);stepN.add(EDGES[x].a);stepN.add(EDGES[x].b);});(cur.f||[]).forEach(n=>stepN.add(n));}}
+  for(const id in edgeEls){const g=edgeEls[id].g;g.classList.toggle('on',allE.has(id));g.classList.toggle('flow',stepE.has(id));}
+  // conteo / calor
+  const vis=S.mode==='calor'?PAINS.filter(q=>!S.phase||q.ph.includes(S.phase)):visible();
+  const score={},count={};
+  vis.forEach(q=>q.nodes.forEach(n=>{score[n]=(score[n]||0)+SEV[q.sev].w;count[n]=(count[n]||0)+1;}));
+  const max=Math.max(1,...Object.values(score));
+  for(const id in nodeEls){const {g,bt,b}=nodeEls[id];
+    g.classList.toggle('primary',!!p&&p.nodes.includes(id));
+    g.classList.toggle('context',!!p&&p.ctx.includes(id));
+    g.classList.toggle('step',stepN.has(id));
+    g.classList.toggle('nodefocus',S.node===id);
+    g.classList.toggle('zero',!score[id]);
+    const v=S.mode==='calor'?score[id]:count[id];
+    b.style.display=v&&!NODES[id].ghost?'':'none';bt.textContent=v||'';
+    g.style.setProperty('--heat',Math.round((score[id]||0)/max*62)+'%');
+    g.style.setProperty('--sev',p?`var(--${p.sev})`:'transparent');
+  }
+  svg.style.setProperty('--sev',p?`var(--${p.sev})`:'var(--accent)');
+  startPulses([...stepE]);
+}
+
+// partículas que recorren los conectores del paso activo
+let raf=null,pulses=[];
+function startPulses(ids){cancelAnimationFrame(raf);gP.innerHTML='';pulses=[];
+  if(!ids.length||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  ids.forEach(id=>{const e=EDGES[id],path=edgeEls[id].p,L=path.getTotalLength();
+    for(let k=0;k<2;k++){const c=el('circle',{r:11,class:'pulse'},gP);pulses.push({c,path,L,off:k*0.5,both:e.arrow==='both'});}});
+  const t0=performance.now();
+  const loop=now=>{const t=((now-t0)/1600)%1;
+    pulses.forEach(q=>{let u=(t+q.off)%1;if(q.both&&q.off)u=1-u;const pt=q.path.getPointAtLength(u*q.L);q.c.setAttribute('cx',pt.x);q.c.setAttribute('cy',pt.y);q.c.setAttribute('opacity',Math.sin(u*Math.PI).toFixed(2));});
+    raf=requestAnimationFrame(loop);};
+  raf=requestAnimationFrame(loop);}
+
+function chips(ids,ctx){return ids.map(n=>`<span class="chip${ctx?' ctx':''}" style="--nc:var(${NODES[n].c})">${label(NODES[n])}</span>`).join('');}
+
+function renderDetail(){
+  const d=document.getElementById('detail');d.className='detail';
+  if(S.mode==='calor'){
+    const vis=PAINS.filter(q=>!S.phase||q.ph.includes(S.phase));const rows={};
+    vis.forEach(q=>q.nodes.forEach(n=>{rows[n]=rows[n]||{s:0,list:[]};rows[n].s+=SEV[q.sev].w;rows[n].list.push(q);}));
+    const arr=Object.entries(rows).sort((a,b)=>b[1].s-a[1].s);const max=arr.length?arr[0][1].s:1;
+    d.innerHTML=`<div><div class="eyebrow">Mapa de calor${S.phase?' · fase '+S.phase:''}</div><h2>Dónde se concentra el dolor</h2>
+      <p>Cada elemento suma el peso de los puntos de dolor que lo implican: crítico 3, alto 2, medio 1. El número sobre cada nodo es esa puntuación. Pulsa una fila para filtrar la lista por ese elemento.</p>
+      <p class="note" style="margin-top:10px">Solo cuentan los elementos que el documento señala como implicados; los de contexto no suman.</p></div>
+      <div style="overflow-x:auto">${arr.length?`<table class="rank"><thead><tr><th>Elemento</th><th>Puntos</th><th>Peso</th><th class="barc"></th></tr></thead><tbody>
+      ${arr.map(([n,r])=>`<tr data-n="${n}"><td><span class="chip" style="--nc:var(${NODES[n].c})">${label(NODES[n])}</span></td><td>${r.list.length}</td><td><b>${r.s}</b></td><td class="barc"><div class="b" style="width:${r.s/max*100}%"></div></td></tr>`).join('')}
+      </tbody></table>`:'<div class="empty">No hay puntos de dolor en esta fase.</div>'}</div>`;
+    d.querySelectorAll('tr[data-n]').forEach(tr=>tr.onclick=()=>{S.node=tr.dataset.n;S.mode='dolor';render();});
+    return;}
+  const p=pain();
+  if(!p){
+    d.innerHTML=`<div><div class="eyebrow">Cómo usarlo</div><h2>Selecciona un punto de dolor</h2>
+      <p>El esquema atenúa todo lo que no interviene y resalta, con el color de su impacto, los elementos que el documento señala. Los elementos de contexto aparecen con borde discontinuo; los que no están en el esquema original (Excel, Power BI, Vimeo, Blink…) se añaden en gris solo cuando hacen falta.</p>
+      <p style="margin-top:10px">Pulsa <b>Reproducir</b> para recorrer el flujo paso a paso. Al hacer clic en un nodo del esquema, la lista se filtra por los puntos de dolor que lo afectan; el número sobre cada nodo indica cuántos son.</p></div>
+      <div><h3>Fases del proceso</h3><ol style="margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px">${[1,2,3,4].map(i=>`<li>${PHASES[i]} <span class="note">· ${PAINS.filter(q=>q.ph.includes(i)).length} puntos</span></li>`).join('')}</ol></div>`;
+    return;}
+  d.classList.add('sev-'+p.sev);
+  const lvl=SEV[p.sev].w;
+  d.innerHTML=`<div>
+      <div class="sevbig"><span class="bar">${[1,2,3].map(i=>`<i class="${i<=lvl?'on':''}"></i>`).join('')}</span>Impacto ${SEV[p.sev].l.toLowerCase()}</div>
+      <h2></h2>
+      <div class="chips" style="margin-bottom:6px">${p.ph.map(f=>`<span class="tag" title="${PHASES[f]}">Fase ${f} · ${PHASES[f]}</span>`).join('')}</div>
+      <h3>Descripción</h3><p class="dd"></p>
+      <h3>Por qué es un problema</h3><p class="dw"></p>
+      <h3>Elementos implicados</h3><div class="chips">${chips(p.nodes)}</div>
+      ${p.ctx.length?`<h3>Contexto del flujo</h3><div class="chips">${chips(p.ctx,1)}</div>`:''}
+    </div>
+    <div class="player">
+      <div class="ctrls">
+        <button class="primary" id="pl">${S.playing?'Pausar':(S.step>=p.steps.length-1?'Repetir':'Reproducir')}</button>
+        <button id="pv" ${S.step<0?'disabled':''} aria-label="Paso anterior">‹ Anterior</button>
+        <button id="nx" ${S.step>=p.steps.length-1?'disabled':''} aria-label="Paso siguiente">Siguiente ›</button>
+        <button id="ov" ${S.step<0?'disabled':''}>Vista general</button>
+      </div>
+      <div class="eyebrow">${S.step<0?'Vista general · '+p.steps.length+' pasos':'Paso '+(S.step+1)+' de '+p.steps.length}</div>
+      <ol class="steps">${p.steps.map((s,i)=>`<li tabindex="0" data-i="${i}" class="${i===S.step?'cur':''}"></li>`).join('')}</ol>
+    </div>`;
+  d.querySelector('h2').textContent=p.t;d.querySelector('.dd').textContent=p.d;d.querySelector('.dw').textContent=p.why;
+  d.querySelectorAll('.steps li').forEach((li,i)=>{li.append(document.createTextNode(p.steps[i].t));const go=()=>{stop();S.step=i;render();};li.onclick=go;li.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}};});
+  d.querySelector('#pl').onclick=()=>{S.playing?stop():play();render();};
+  d.querySelector('#pv').onclick=()=>{stop();S.step=Math.max(-1,S.step-1);render();};
+  d.querySelector('#nx').onclick=()=>{stop();S.step=Math.min(p.steps.length-1,S.step+1);render();};
+  d.querySelector('#ov').onclick=()=>{stop();S.step=-1;render();};
+}
+
+function render(){
+  document.getElementById('m-dolor').setAttribute('aria-pressed',String(S.mode==='dolor'));
+  document.getElementById('m-calor').setAttribute('aria-pressed',String(S.mode==='calor'));
+  renderPhases();renderCards();renderMap();renderDetail();
+}
+document.addEventListener('keydown',e=>{const p=pain();if(!p||S.mode!=='dolor'||/INPUT|TEXTAREA/.test(e.target.tagName))return;
+  if(e.key==='ArrowRight'){stop();S.step=Math.min(p.steps.length-1,S.step+1);render();}
+  if(e.key==='ArrowLeft'){stop();S.step=Math.max(-1,S.step-1);render();}
+  if(e.key==='Escape'){select(null);render();}});
+render();
+})();
+</script>
+</body></html>
