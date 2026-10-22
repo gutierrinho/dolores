@@ -21,7 +21,7 @@
 [hidden]{display:none!important}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 32px}
-.wrap{max-width:1500px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.wrap{max-width:1440px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
 .eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .sev-crit{--sev:var(--crit);--sev-on:#fff} .sev-alto{--sev:var(--alto);--sev-on:#fff} .sev-medio{--sev:var(--medio);--sev-on:var(--ink)}
 
@@ -201,6 +201,10 @@ table.rank tr[data-n]:hover td{background:var(--surface-2)}
 </div>
 
 <script>
+/* Escala todo el simulador según el ancho disponible (diseñado para 1440 px), para que llene marcos grandes como el lienzo de Genially */
+(function(){const BASE=1440;
+  function fit(){const z=Math.max(1,Math.min(2.2,window.innerWidth/BASE));document.documentElement.style.zoom=z;}
+  fit();window.addEventListener('resize',fit);})();
 (function(){
 /* Nodos: x,y = centro; w,h = tamaño; c = color; l = etiqueta (\n = salto) */
 const NODES = {
