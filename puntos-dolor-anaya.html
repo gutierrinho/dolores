@@ -1,180 +1,172 @@
 <!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Puntos de dolor Anaya</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: lista de puntos de dolor a la izquierda; esquema del ecosistema + ficha/simulador a la derecha */
+/* Layout: lista desplegable de puntos de dolor a la izquierda; esquema fijo a la derecha; pestañas de fase al final. Tema blanco único. */
 :root{
-  --bg:#f5f4f9; --surface:#ffffff; --surface-2:#eeedf5; --ink:#1c1a26; --muted:#615f72; --line:#dad8e5;
+  --bg:#ffffff; --surface:#ffffff; --surface-2:#f3f2f8; --ink:#1c1a26; --muted:#615f72; --line:#e4e2ee;
   --accent:#6a2fe0;
-  --crit:#c41f3d; --alto:#d4631a; --medio:#a07f00;
-  --c-bq:#7c3aed; --c-yel:#e2b12b; --c-ora:#ea7a2e; --c-blk:#1c1a26; --c-grn:#6aa33a; --c-blu:#2f9ae0; --c-red:#e03131; --c-pink:#d63ec4; --c-ghost:#8a879b;
-  --edge:#2a2834;
+  --crit:#c8102e; --alto:#ea7317; --medio:#d9a400;
+  --c-bq:#7c3aed; --c-yel:#d9a521; --c-ora:#e8742a; --c-blk:#3a3748; --c-grn:#5f9a32; --c-blu:#2b8fd6; --c-red:#d93a3a; --c-pink:#cf3dbd; --c-ghost:#8a879b;
+  --c-xls:#1e7a46; --c-pbi:#c9940a;
+  --edge:#55526a;
   --f-display:"Archivo", "Helvetica Neue", Arial, sans-serif;
   --f-body:"Archivo", "Helvetica Neue", Arial, sans-serif;
   --f-mono:"IBM Plex Mono", ui-monospace, Menlo, monospace;
+  color-scheme:light;
 }
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#111017; --surface:#1a1922; --surface-2:#24222f; --ink:#ecebf4; --muted:#a3a1b4; --line:#2f2d3c;
-  --accent:#a07bff;
-  --crit:#ff5a73; --alto:#ff9447; --medio:#e3bf2e;
-  --c-bq:#a57bff; --c-yel:#e8bd3e; --c-ora:#f58d45; --c-blk:#d6d4e2; --c-grn:#86c252; --c-blu:#55b2f2; --c-red:#ff5555; --c-pink:#ea62d9; --c-ghost:#8d8aa0;
-  --edge:#cfcddc; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#111017; --surface:#1a1922; --surface-2:#24222f; --ink:#ecebf4; --muted:#a3a1b4; --line:#2f2d3c;
-  --accent:#a07bff;
-  --crit:#ff5a73; --alto:#ff9447; --medio:#e3bf2e;
-  --c-bq:#a57bff; --c-yel:#e8bd3e; --c-ora:#f58d45; --c-blk:#d6d4e2; --c-grn:#86c252; --c-blu:#55b2f2; --c-red:#ff5555; --c-pink:#ea62d9; --c-ghost:#8d8aa0;
-  --edge:#cfcddc; color-scheme:dark}
-
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
-  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
-.wrap{max-width:1500px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
-header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px}
-h1{font-family:var(--f-display);font-weight:800;font-size:clamp(1.5rem,2.4vw,2rem);letter-spacing:-.02em;margin:0;line-height:1.1;text-wrap:balance}
-.sub{color:var(--muted);margin:.3rem 0 0;max-width:70ch}
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 32px}
+.wrap{max-width:1500px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
 .eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.summary{display:flex;gap:8px;flex-wrap:wrap}
-.pill{display:inline-flex;align-items:center;gap:6px;font-size:.8rem;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--surface-2);white-space:nowrap}
-.dot{width:9px;height:9px;border-radius:50%;flex:none}
-.sev-crit{--sev:var(--crit)} .sev-alto{--sev:var(--alto)} .sev-medio{--sev:var(--medio)}
-.dot{background:var(--sev)}
+.sev-crit{--sev:var(--crit);--sev-on:#fff} .sev-alto{--sev:var(--alto);--sev-on:#fff} .sev-medio{--sev:var(--medio);--sev-on:var(--ink)}
 
-.app{display:grid;grid-template-columns:minmax(260px,330px) minmax(0,1fr);gap:18px;align-items:start}
-@media (max-width:900px){.app{grid-template-columns:1fr}}
+.app{display:grid;grid-template-columns:minmax(300px,400px) minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:960px){.app{grid-template-columns:1fr}}
 
-/* lista */
+/* lista desplegable */
 aside{display:flex;flex-direction:column;gap:10px;min-width:0}
-.list-head{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:28px}
-.nodechip{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;padding:3px 4px 3px 10px;border-radius:999px;background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--ink)}
+.list-head{display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:32px}
+.nodechip{display:inline-flex;align-items:center;gap:6px;font-size:.78rem;font-weight:600;padding:3px 4px 3px 10px;border-radius:999px;background:color-mix(in srgb,var(--accent) 12%,transparent);color:var(--ink)}
 .nodechip button{border:0;background:transparent;color:inherit;cursor:pointer;font-size:1rem;line-height:1;padding:0 6px;border-radius:50%}
 .cards{display:flex;flex-direction:column;gap:8px}
-.card{all:unset;box-sizing:border-box;display:grid;grid-template-columns:4px 1fr;gap:0 12px;cursor:pointer;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 12px 12px 0;transition:border-color .15s,transform .15s}
-.card:hover{border-color:color-mix(in srgb,var(--sev) 60%,var(--line))}
-.card:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.card[aria-pressed="true"]{border-color:var(--sev);box-shadow:0 0 0 1px var(--sev)}
-.card .stripe{background:var(--sev);border-radius:0 3px 3px 0;grid-row:1/4}
-.card .t{font-weight:700;font-size:.95rem;line-height:1.3}
-.card .meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px;align-items:center}
+.card{background:color-mix(in srgb,var(--sev) 7%,var(--surface));border:1px solid color-mix(in srgb,var(--sev) 35%,var(--surface));border-radius:10px;overflow:hidden;position:relative;transition:border-color .15s,box-shadow .15s}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:7px;background:var(--sev)}
+.card:hover{border-color:color-mix(in srgb,var(--sev) 70%,var(--surface))}
+.card.open{border-color:var(--sev);box-shadow:0 0 0 1px var(--sev),0 6px 20px -10px color-mix(in srgb,var(--sev) 60%,transparent)}
+.card-head{all:unset;box-sizing:border-box;display:grid;grid-template-columns:1fr auto;gap:4px 10px;width:100%;padding:12px 14px 12px 18px;cursor:pointer}
+.card-head:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;border-radius:10px}
+.card-head .t{font-weight:700;font-size:.95rem;line-height:1.3}
+.card-head .chev{width:22px;height:22px;display:grid;place-items:center;color:var(--muted);transition:transform .2s}
+.card.open .card-head .chev{transform:rotate(180deg);color:var(--sev)}
+.card-head .meta{grid-column:1/-1;display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 .tag{font-family:var(--f-mono);font-size:.68rem;padding:1px 6px;border-radius:4px;background:var(--surface-2);color:var(--muted)}
-.sevtag{font-size:.72rem;font-weight:700;color:var(--sev);text-transform:uppercase;letter-spacing:.05em}
+.sevtag{font-size:.68rem;font-weight:700;color:var(--sev-on);background:var(--sev);border-radius:999px;padding:1px 9px;text-transform:uppercase;letter-spacing:.06em}
+.card .tag{background:color-mix(in srgb,var(--sev) 12%,var(--surface));color:var(--ink)}
+.card-body{padding:0 16px 16px 18px;display:flex;flex-direction:column;gap:2px}
+.card-body h3{font-size:.68rem;font-family:var(--f-mono);font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:12px 0 4px}
+.card-body p{margin:0;font-size:.9rem;line-height:1.5}
+.card-body .why{font-weight:600}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.78rem;font-weight:600;padding:2px 9px;border-radius:999px;border:1.5px solid var(--nc);background:color-mix(in srgb,var(--nc) 9%,var(--surface))}
+.chip.ctx{border-style:dashed;font-weight:500;color:var(--muted);background:var(--surface)}
 .empty{padding:16px;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:.9rem}
 
-/* zona principal */
-main{display:flex;flex-direction:column;gap:12px;min-width:0}
-.toolbar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between}
-.seg{display:inline-flex;background:var(--surface-2);border-radius:9px;padding:3px;gap:2px}
-.seg button,.phases button{border:0;background:transparent;color:var(--muted);font:600 .82rem var(--f-body);padding:6px 12px;border-radius:7px;cursor:pointer}
-.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
-.phases{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
-.phases button{border:1px solid var(--line);padding:4px 10px;font-size:.78rem}
-.phases button[aria-pressed="true"]{border-color:var(--accent);color:var(--ink);background:color-mix(in srgb,var(--accent) 12%,transparent)}
-.seg button:focus-visible,.phases button:focus-visible,.player button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.player{margin-top:14px;display:flex;flex-direction:column;gap:10px;background:var(--surface-2);border-radius:9px;padding:12px}
+.player .ctrls{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.player button{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 .8rem var(--f-body);padding:5px 11px;border-radius:7px;cursor:pointer}
+.player button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.player button:disabled{opacity:.4;cursor:default}
+.player button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px;counter-reset:s}
+.steps li{display:grid;grid-template-columns:24px 1fr;gap:8px;padding:6px 8px;border-radius:7px;cursor:pointer;font-size:.85rem;color:var(--muted);line-height:1.4}
+.steps li::before{counter-increment:s;content:counter(s);font-family:var(--f-mono);font-size:.72rem;width:21px;height:21px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);background:var(--surface)}
+.steps li.cur{background:var(--surface);color:var(--ink);box-shadow:inset 3px 0 0 var(--sev)}
+.steps li.cur::before{background:var(--sev);border-color:var(--sev);color:#fff}
+.steps li:focus-visible{outline:2px solid var(--accent)}
 
-.stage{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow-x:auto;position:relative}
+/* zona del esquema */
+main{display:flex;flex-direction:column;gap:12px;min-width:0;position:sticky;top:max(12px,env(safe-area-inset-top,0px))}
+@media (max-width:960px){main{position:static}}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;justify-content:space-between;min-height:32px}
+.seg{display:inline-flex;background:var(--surface-2);border-radius:9px;padding:3px;gap:2px}
+.seg button{border:0;background:transparent;color:var(--muted);font:600 .82rem var(--f-body);padding:6px 12px;border-radius:7px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.stage{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow-x:auto;
+  background-image:radial-gradient(circle,var(--line) 1px,transparent 1.2px);background-size:22px 22px}
 .stage svg{display:block;width:100%;min-width:760px;height:auto}
 .legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.76rem;color:var(--muted)}
 .legend span{display:inline-flex;align-items:center;gap:6px}
 .legend svg{flex:none}
 
-/* SVG */
-.node rect.body{fill:var(--surface);stroke:var(--nc);stroke-width:5;transition:fill .25s,opacity .25s}
-.node.big rect.body{stroke-width:7}
-.node text{fill:var(--ink);font-family:var(--f-body);font-weight:500;pointer-events:none}
+/* SVG: zona OLA */
+.zone rect{fill:color-mix(in srgb,var(--c-bq) 5%,var(--surface));stroke:color-mix(in srgb,var(--c-bq) 45%,var(--surface));stroke-width:2.5;stroke-dasharray:12 8}
+.zone text{fill:var(--c-bq);font-family:var(--f-display);font-weight:800;font-size:40px;letter-spacing:.06em}
+svg.sel .zone{opacity:.55}
+
+/* SVG: nodos */
+.node rect.body{fill:color-mix(in srgb,var(--nc) 8%,var(--surface));stroke:var(--nc);stroke-width:3;transition:fill .25s,stroke-width .2s;filter:url(#shadow)}
+.node.big rect.body{fill:color-mix(in srgb,var(--nc) 13%,var(--surface));stroke-width:4}
+.node rect.cap{fill:var(--nc)}
+.node text{fill:var(--ink);font-family:var(--f-body);font-weight:600;pointer-events:none}
 .node{cursor:pointer;transition:opacity .25s}
+.node:hover rect.body{stroke-width:5}
 .node:focus{outline:none}
 .node:focus-visible rect.body{stroke-dasharray:10 6}
 .node rect.halo{fill:none;stroke:var(--sev,transparent);stroke-width:0;opacity:0;transition:opacity .25s}
-.node .badge{opacity:1;transition:opacity .2s}
-.node .badge circle{fill:var(--ink)}
-.node .badge text{fill:var(--surface);font-family:var(--f-mono);font-weight:500;font-size:22px}
-.node.ghost rect.body{stroke:var(--c-ghost);stroke-dasharray:10 7;stroke-width:3;fill:var(--surface-2)}
-.node.ghost text{fill:var(--muted);font-style:italic}
+.node .badge rect{fill:var(--ink)}
+.node .badge text{fill:#fff;font-family:var(--f-mono);font-weight:500;font-size:20px}
+.node.ghost rect.body{stroke:var(--c-ghost);stroke-dasharray:8 6;stroke-width:2.5;fill:var(--surface-2);filter:none}
+.node.ghost rect.cap{display:none}
+.node.ghost text{fill:var(--muted);font-style:italic;font-weight:500}
 .node.ghost{display:none}
 svg.sel .node.ghost.context,svg.sel .node.ghost.primary{display:inline}
 
-.edge path{fill:none;stroke:var(--edge);stroke-width:5;stroke-linecap:round;transition:opacity .25s,stroke .25s}
-.edge.dot path{stroke-dasharray:0 12;stroke-width:6}
-.edge.red path{stroke:var(--c-red)} .edge.red polygon{fill:var(--c-red)}
-.edge.green path{stroke:var(--c-grn);stroke-width:3} .edge.green polygon{fill:var(--c-grn)}
-.edge polygon{fill:var(--edge);transition:opacity .25s}
+/* SVG: conexiones */
+.edge path{fill:none;stroke:var(--edge);stroke-width:3.5;stroke-linecap:round;transition:opacity .25s,stroke .25s}
+.edge.dot path{stroke-dasharray:1 10;stroke-width:5}
+.edge polygon{fill:var(--edge);stroke:var(--edge);stroke-width:3;stroke-linejoin:round;transition:opacity .25s}
+.edge.red path{stroke:var(--c-red)} .edge.red polygon{fill:var(--c-red);stroke:var(--c-red)}
 .edge.ghost{display:none}
-.edge.ghost path{stroke:var(--c-ghost);stroke-dasharray:3 9;stroke-width:4}
-.edge.ghost polygon{fill:var(--c-ghost)}
+.edge.ghost path{stroke:var(--c-ghost);stroke-dasharray:6 8;stroke-width:3}
+.edge.ghost polygon{fill:var(--c-ghost);stroke:var(--c-ghost)}
 
-svg.sel .node{opacity:.16}
+svg.sel .node{opacity:.18}
 svg.sel .edge{opacity:.1}
 svg.sel .node.primary,svg.sel .node.context{opacity:1}
-svg.sel .node.primary rect.body{fill:color-mix(in srgb,var(--sev) 16%,var(--surface))}
-svg.sel .node.primary rect.halo{stroke-width:4;opacity:.9}
-svg.sel .node.context rect.body{stroke-dasharray:14 8}
+svg.sel .node.primary rect.body{fill:color-mix(in srgb,var(--sev) 15%,var(--surface))}
+svg.sel .node.primary rect.halo{stroke-width:4;opacity:.85}
+svg.sel .node.context rect.body{stroke-dasharray:12 7}
 svg.sel .node .badge{opacity:0}
-svg.sel .edge.on{opacity:.75}
+svg.sel .edge.on{opacity:.7}
 svg.sel .edge.ghost.on{display:inline}
 svg.sel .edge.flow{opacity:1}
-svg.sel .edge.flow path{stroke:var(--sev);stroke-dasharray:16 12;stroke-width:6;animation:dash 0.9s linear infinite}
-svg.sel .edge.flow polygon{fill:var(--sev)}
-svg.sel .node.step rect.body{stroke-width:9}
-svg.sel .node.primary.step rect.body{fill:color-mix(in srgb,var(--sev) 30%,var(--surface))}
-@keyframes dash{to{stroke-dashoffset:-28}}
-.pulse{fill:var(--sev);pointer-events:none}
+svg.sel .edge.flow path{stroke:var(--sev);stroke-dasharray:14 10;stroke-width:5;animation:dash .9s linear infinite}
+svg.sel .edge.flow polygon{fill:var(--sev);stroke:var(--sev)}
+svg.sel .node.step rect.body{stroke-width:6}
+svg.sel .node.primary.step rect.body{fill:color-mix(in srgb,var(--sev) 28%,var(--surface))}
+@keyframes dash{to{stroke-dashoffset:-24}}
+.pulse{fill:var(--sev);stroke:#fff;stroke-width:3;pointer-events:none}
 
 svg.heat .node:not(.ghost) rect.body{fill:color-mix(in srgb,var(--crit) var(--heat,0%),var(--surface))}
 svg.heat .edge{opacity:.25}
 svg.heat .node.zero{opacity:.35}
-svg.focusnode .node.nodefocus rect.body{stroke-width:10}
+svg.focusnode .node.nodefocus rect.body{stroke-width:7}
 
-/* ficha */
-.detail{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:18px 20px;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:18px 28px}
-@media (max-width:1100px){.detail{grid-template-columns:1fr}}
-.detail h2{font-family:var(--f-display);font-size:1.3rem;font-weight:800;letter-spacing:-.01em;margin:4px 0 8px;line-height:1.2;text-wrap:balance}
-.detail h3{font-size:.72rem;font-family:var(--f-mono);font-weight:500;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:14px 0 4px}
-.detail p{margin:0;max-width:68ch}
-.chips{display:flex;flex-wrap:wrap;gap:6px}
-.chip{font-size:.8rem;font-weight:600;padding:3px 9px;border-radius:6px;border:2px solid var(--nc);background:var(--surface)}
-.chip.ctx{border-style:dashed;font-weight:500;color:var(--muted)}
-.sevbig{display:inline-flex;align-items:center;gap:8px;font-weight:800;color:var(--sev);text-transform:uppercase;letter-spacing:.06em;font-size:.8rem}
-.sevbig .bar{display:inline-flex;gap:3px}
-.sevbig .bar i{width:14px;height:6px;border-radius:2px;background:var(--surface-2)}
-.sevbig .bar i.on{background:var(--sev)}
-
-.player{display:flex;flex-direction:column;gap:12px;background:var(--surface-2);border-radius:10px;padding:14px}
-.player .ctrls{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
-.player button{border:1px solid var(--line);background:var(--surface);color:var(--ink);font:600 .82rem var(--f-body);padding:6px 12px;border-radius:7px;cursor:pointer}
-.player button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
-.player button:disabled{opacity:.4;cursor:default}
-.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;counter-reset:s}
-.steps li{display:grid;grid-template-columns:26px 1fr;gap:8px;padding:7px 8px;border-radius:7px;cursor:pointer;font-size:.88rem;color:var(--muted);line-height:1.4}
-.steps li::before{counter-increment:s;content:counter(s);font-family:var(--f-mono);font-size:.75rem;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;border:1px solid var(--line);background:var(--surface)}
-.steps li.cur{background:var(--surface);color:var(--ink);box-shadow:inset 3px 0 0 var(--sev)}
-.steps li.cur::before{background:var(--sev);border-color:var(--sev);color:#fff}
-.steps li:focus-visible{outline:2px solid var(--accent)}
-
+/* ranking del mapa de calor */
+.rankbox{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.rankbox h2{font-family:var(--f-display);font-size:1.1rem;font-weight:800;margin:0}
+.rankbox p{margin:0;color:var(--muted);font-size:.86rem;max-width:80ch}
+.rankwrap{overflow-x:auto}
 table.rank{width:100%;border-collapse:collapse;font-size:.86rem;font-variant-numeric:tabular-nums}
 table.rank td,table.rank th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
 table.rank th{font-family:var(--f-mono);font-weight:500;font-size:.7rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-table.rank .barc{width:40%}
+table.rank .barc{width:45%}
 table.rank .b{height:8px;border-radius:4px;background:var(--crit)}
-table.rank tr{cursor:pointer}
-table.rank tr:hover td{background:var(--surface-2)}
-.note{font-size:.8rem;color:var(--muted)}
-@media (prefers-reduced-motion:reduce){svg.sel .edge.flow path{animation:none}.pulse{display:none}}
+table.rank tr[data-n]{cursor:pointer}
+table.rank tr[data-n]:hover td{background:var(--surface-2)}
+
+/* pestañas de fase (al final) */
+.phasebar{display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);padding-top:4px}
+.tabs{display:flex;gap:2px;overflow-x:auto;scrollbar-width:thin}
+.tab{border:0;background:transparent;color:var(--muted);font:600 .88rem var(--f-body);padding:11px 14px 10px;cursor:pointer;white-space:nowrap;border-top:3px solid transparent;display:inline-flex;align-items:center;gap:8px}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink);border-top-color:var(--accent)}
+.tab .n{font-family:var(--f-mono);font-size:.7rem;font-weight:500;background:var(--surface-2);color:var(--muted);border-radius:999px;padding:1px 7px}
+.tab[aria-selected="true"] .n{background:color-mix(in srgb,var(--accent) 14%,transparent);color:var(--accent)}
+.tab .k{font-family:var(--f-mono);font-weight:500;color:var(--muted)}
+.tab:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.phase-desc{margin:0;color:var(--muted);font-size:.9rem;min-height:1.4em;padding-left:14px}
+@media (prefers-reduced-motion:reduce){svg.sel .edge.flow path{animation:none}.pulse{display:none}.card-head .chev{transition:none}}
 </style>
 </head><body>
 
 <div class="wrap">
-  <header>
-    <div>
-      <div class="eyebrow">Ecosistema Anaya · simulador</div>
-      <h1>Puntos de dolor del ecosistema</h1>
-      <p class="sub">Elige un punto de dolor para ver qué elementos del esquema implica y reproducir, paso a paso, el recorrido donde se produce el problema.</p>
-    </div>
-    <div class="summary" id="summary"></div>
-  </header>
-
   <div class="app">
     <aside>
       <div class="list-head"><span class="eyebrow" id="listcount">Puntos de dolor</span><span id="nodefilter"></span></div>
@@ -187,87 +179,98 @@ table.rank tr:hover td{background:var(--surface-2)}
           <button id="m-dolor" aria-pressed="true">Por punto de dolor</button>
           <button id="m-calor" aria-pressed="false">Mapa de calor</button>
         </div>
-        <div class="phases" id="phases" role="group" aria-label="Filtrar por fase"></div>
       </div>
-      <div class="stage"><svg id="map" viewBox="0 0 1760 1190" role="img" aria-label="Esquema del ecosistema Anaya"></svg></div>
+      <div class="stage"><svg id="map" viewBox="0 0 1800 1010" role="img" aria-label="Esquema del ecosistema Anaya">
+        <defs><filter id="shadow" x="-10%" y="-20%" width="120%" height="150%"><feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#2a2340" flood-opacity=".12"/></filter></defs>
+      </svg></div>
       <div class="legend">
         <span><svg width="34" height="10"><line x1="2" y1="5" x2="32" y2="5" stroke="var(--edge)" stroke-width="3" stroke-linecap="round"/></svg>Conexión continua</span>
-        <span><svg width="34" height="10"><line x1="3" y1="5" x2="32" y2="5" stroke="var(--edge)" stroke-width="4" stroke-dasharray="0 7" stroke-linecap="round"/></svg>Conexión punteada</span>
-        <span><svg width="34" height="14"><rect x="2" y="2" width="30" height="10" rx="5" fill="var(--surface)" stroke="var(--crit)" stroke-width="2"/></svg>Implicado según el documento</span>
+        <span><svg width="34" height="10"><line x1="3" y1="5" x2="32" y2="5" stroke="var(--edge)" stroke-width="4" stroke-dasharray="1 7" stroke-linecap="round"/></svg>Conexión punteada</span>
+        <span><svg width="34" height="14"><rect x="2" y="2" width="30" height="10" rx="5" fill="var(--surface)" stroke="var(--crit)" stroke-width="2"/></svg>Implicado en el proceso</span>
         <span><svg width="34" height="14"><rect x="2" y="2" width="30" height="10" rx="5" fill="var(--surface)" stroke="var(--muted)" stroke-width="2" stroke-dasharray="4 3"/></svg>Contexto del flujo</span>
-        <span><svg width="34" height="14"><rect x="2" y="2" width="30" height="10" rx="5" fill="var(--surface-2)" stroke="var(--c-ghost)" stroke-width="2" stroke-dasharray="3 3"/></svg>Fuera del esquema (Excel, Power BI…)</span>
+        <span><svg width="34" height="14"><rect x="2" y="2" width="30" height="10" rx="5" fill="var(--surface-2)" stroke="var(--c-ghost)" stroke-width="2" stroke-dasharray="3 3"/></svg>Fuera del esquema (Teams, Vimeo…)</span>
       </div>
-      <section class="detail" id="detail" aria-live="polite"></section>
+      <section class="rankbox" id="rank" hidden></section>
     </main>
+  </div>
+
+  <div class="phasebar">
+    <nav class="tabs" id="tabs" role="tablist" aria-label="Fases"></nav>
+    <p class="phase-desc" id="phasedesc"></p>
   </div>
 </div>
 
 <script>
 (function(){
+/* Nodos: x,y = centro; w,h = tamaño; c = color; l = etiqueta (\n = salto) */
 const NODES = {
-  genially:{x:140,y:213,w:210,h:98,c:'--c-pink',l:'Genially',fs:30},
-  dambq:{x:548,y:227,w:235,h:82,c:'--c-bq',l:'DAM (BQ)',fs:28},
-  ha:{x:545,y:413,w:445,h:158,c:'--c-bq',l:'Herramienta\nautora (BQ)',fs:38,big:1,short:'Herramienta autora (HA)'},
-  dist:{x:1102,y:360,w:340,h:120,c:'--c-yel',l:'Distribuidor\ndigital',fs:32},
-  ccaa:{x:922,y:144,w:338,h:120,c:'--c-ora',l:'Plataforma\nCCAA/colegio',fs:31},
-  otros:{x:1305,y:151,w:358,h:134,c:'--c-ora',l:'Otros (cliente\nfinal, familia,\nacademia…)',fs:31},
-  beta:{x:1590,y:358,w:276,h:130,c:'--c-yel',l:'BETA',fs:32},
-  garec:{x:1592,y:553,w:222,h:78,c:'--c-yel',l:'GA Recursos',fs:27},
-  oracle:{x:1012,y:629,w:236,h:84,c:'--c-blk',l:'ORACLE',fs:28},
-  sf:{x:1288,y:628,w:234,h:82,c:'--c-blk',l:'Salesforce +\nMylead',fs:27},
-  ola:{x:1370,y:820,w:488,h:172,c:'--c-bq',l:'OLA\nLMS',fs:44,big:1,short:'OLA LMS'},
-  gen:{x:1370,y:1045,w:326,h:156,c:'--c-bq',l:'Generador\nevaluaciones y\nfichas (BQ)',fs:31,big:1,short:'Generador evaluaciones y fichas'},
-  nexus:{x:372,y:613,w:228,h:80,c:'--c-grn',l:'DAM (Nexus)',fs:28},
-  mem:{x:118,y:737,w:156,h:78,c:'--c-yel',l:'MEM',fs:28},
-  a2r:{x:463,y:863,w:164,h:98,c:'--c-blu',l:'A2R',fs:32},
-  gade:{x:765,y:983,w:270,h:96,c:'--c-yel',l:'GADE\n(contenido)',fs:31},
-  prog:{x:310,y:1070,w:338,h:120,c:'--c-red',l:'Programaciones IA\n(1MillionBot)',fs:31,short:'Programaciones IA (1MillionBot)'},
-  // elementos que no aparecen en el esquema pero sí en el documento
-  excel:{x:330,y:72,w:200,h:62,c:'--c-ghost',l:'Excel (cargas)',fs:25,ghost:1},
-  servidor:{x:640,y:72,w:250,h:62,c:'--c-ghost',l:'Servidor de recursos',fs:25,ghost:1},
-  vimeo:{x:92,y:520,w:132,h:58,c:'--c-ghost',l:'Vimeo',fs:25,ghost:1},
-  powerbi:{x:700,y:1140,w:170,h:58,c:'--c-ghost',l:'Power BI',fs:25,ghost:1},
-  teams:{x:985,y:1140,w:300,h:58,c:'--c-ghost',l:'Teams · Excel seguim.',fs:25,ghost:1},
-  blink:{x:1625,y:692,w:150,h:58,c:'--c-ghost',l:'Blink',fs:25,ghost:1}
+  // zona OLA (BQ)
+  dambq:{x:900,y:215,w:230,h:70,c:'--c-bq',l:'DAM'},
+  ha:{x:900,y:390,w:380,h:120,c:'--c-bq',l:'Herramienta autora',big:1},
+  ola:{x:900,y:630,w:380,h:120,c:'--c-bq',l:'LMS',big:1},
+  gen:{x:900,y:870,w:340,h:100,c:'--c-bq',l:'Generador de\nevaluaciones y fichas'},
+  // origen de contenidos
+  genially:{x:200,y:100,w:200,h:70,c:'--c-pink',l:'Genially'},
+  nexus:{x:430,y:300,w:210,h:70,c:'--c-grn',l:'DAM (Nexus)'},
+  gade:{x:145,y:480,w:230,h:84,c:'--c-yel',l:'Contenidos papel\n(GADE)'},
+  a2r:{x:450,y:480,w:270,h:84,c:'--c-blu',l:'Traducción y otras\nfunciones IA (A2R)'},
+  prog:{x:145,y:730,w:250,h:84,c:'--c-red',l:'Programaciones IA\n(1MillionBot)'},
+  mem:{x:450,y:730,w:270,h:84,c:'--c-yel',l:'Almacén de recursos\ndigitales (MEM)'},
+  excel:{x:145,y:920,w:200,h:70,c:'--c-xls',l:'Excel'},
+  powerbi:{x:450,y:920,w:200,h:70,c:'--c-pbi',l:'Power BI'},
+  // distribución
+  dist:{x:1420,y:390,w:280,h:100,c:'--c-yel',l:'Distribuidor\ndigital'},
+  ccaa:{x:1320,y:150,w:280,h:100,c:'--c-ora',l:'Plataforma\nCCAA/colegio'},
+  otros:{x:1625,y:150,w:300,h:120,c:'--c-ora',l:'Otros (cliente\nfinal, familia,\nacademia…)'},
+  beta:{x:1705,y:390,w:160,h:80,c:'--c-yel',l:'BETA'},
+  garec:{x:1695,y:560,w:190,h:70,c:'--c-yel',l:'GA Recursos'},
+  oracle:{x:1360,y:650,w:190,h:70,c:'--c-blk',l:'Oracle'},
+  sf:{x:1570,y:650,w:200,h:84,c:'--c-blk',l:'Salesforce +\nMylead'},
+  // fuera del esquema: solo aparecen cuando un punto de dolor los usa
+  servidor:{x:560,y:48,w:260,h:60,c:'--c-ghost',l:'Servidor de recursos',ghost:1},
+  vimeo:{x:590,y:880,w:130,h:60,c:'--c-ghost',l:'Vimeo',ghost:1},
+  teams:{x:1330,y:920,w:290,h:60,c:'--c-ghost',l:'Teams · Excel seguim.',ghost:1},
+  blink:{x:1330,y:790,w:140,h:60,c:'--c-ghost',l:'Blink',ghost:1}
 };
+const FS=25; // tamaño único para todas las etiquetas
+const ZONE={x:670,y:70,w:460,h:900,l:'OLA (BQ)'};
+
+/* Conexiones: sa/sb = lado de salida/llegada (l,r,t,b), oa/ob = desplazamiento a lo largo del lado, k = curvatura */
 const EDGES = {
   e_dambq_ha:{a:'dambq',b:'ha',arrow:'end'},
-  e_gen_ha:{a:'genially',b:'ha',dot:1,arrow:'end'},
-  e_mem_ha:{a:'mem',b:'ha',dot:1,arrow:'end'},
-  e_ha_dist:{a:'ha',b:'dist',arrow:'end'},
-  e_dist_ccaa:{a:'dist',b:'ccaa',arrow:'end'},
-  e_dist_otros:{a:'dist',b:'otros',arrow:'end'},
-  e_dist_beta:{a:'dist',b:'beta',arrow:'end'},
-  e_garec_beta:{a:'garec',b:'beta',arrow:'end'},
-  e_oracle_dist:{a:'oracle',b:'dist',arrow:'end'},
-  e_sf_dist:{a:'sf',b:'dist',arrow:'end',color:'red'},
   e_ha_ola:{a:'ha',b:'ola',arrow:'both'},
   e_gen_ola:{a:'gen',b:'ola',arrow:'end'},
-  e_nexus_ha:{a:'nexus',b:'ha',dot:1,arrow:'end'},
+  e_gen_ha:{a:'genially',b:'ha',dot:1,arrow:'end',sa:'r',sb:'t',ob:-.32,k:170},
+  e_nexus_ha:{a:'nexus',b:'ha',dot:1,arrow:'end',sa:'r',sb:'l',ob:-.12},
+  e_gade_ha:{a:'gade',b:'ha',dot:1,arrow:'end',sa:'t',sb:'l',oa:.2,ob:.12,k:70},
+  e_mem_ha:{a:'mem',b:'ha',dot:1,arrow:'end',sa:'r',sb:'l',ob:.3},
   e_nexus_a2r:{a:'nexus',b:'a2r',dot:1,arrow:'both'},
   e_a2r_mem:{a:'a2r',b:'mem',dot:1,arrow:'end'},
   e_prog_mem:{a:'prog',b:'mem',dot:1,arrow:'end'},
-  e_prog_ha:{a:'prog',b:'ha',arrow:'end',color:'green',c1:[300,850],c2:[545,640]},
   e_gade_a2r:{a:'gade',b:'a2r',dot:1,arrow:'end'},
-  e_gade_ha:{a:'gade',b:'ha',dot:1,arrow:'end'},
   e_gade_prog:{a:'gade',b:'prog',arrow:'end'},
-  g_excel_ha:{a:'excel',b:'ha',ghost:1,arrow:'end'},
-  g_excel_ola:{a:'excel',b:'ola',ghost:1,arrow:'end',c1:[900,40],c2:[1240,500]},
-  g_serv_dambq:{a:'servidor',b:'dambq',ghost:1,arrow:'end'},
-  g_ha_teams:{a:'ha',b:'teams',ghost:1,arrow:'end',c1:[820,700],c2:[960,900]},
-  g_ola_teams:{a:'ola',b:'teams',ghost:1,arrow:'end'},
-  g_teams_pbi:{a:'teams',b:'powerbi',ghost:1,arrow:'end'},
-  g_mem_vimeo:{a:'mem',b:'vimeo',ghost:1,arrow:'end'},
-  g_vimeo_ha:{a:'vimeo',b:'ha',ghost:1,arrow:'end',c1:[160,380],c2:[260,330]},
-  g_gade_nexus:{a:'gade',b:'nexus',ghost:1,arrow:'both',c1:[640,820],c2:[480,700]},
-  g_blink_ola:{a:'blink',b:'ola',ghost:1,arrow:'end'}
+  e_ha_dist:{a:'ha',b:'dist',arrow:'end'},
+  e_dist_ccaa:{a:'dist',b:'ccaa',arrow:'end',oa:-.2},
+  e_dist_otros:{a:'dist',b:'otros',arrow:'end',oa:.2,sb:'b'},
+  e_dist_beta:{a:'dist',b:'beta',arrow:'end'},
+  e_garec_beta:{a:'garec',b:'beta',arrow:'end',oa:-.05},
+  e_oracle_dist:{a:'oracle',b:'dist',arrow:'end',sa:'t',sb:'b',ob:-.22},
+  e_sf_dist:{a:'sf',b:'dist',arrow:'end',sa:'t',sb:'b',ob:.22},
+  // conexiones de flujo que no están en el esquema original
+  g_serv_dambq:{a:'servidor',b:'dambq',ghost:1,arrow:'end',sa:'r',sb:'t',oa:0},
+  g_ha_teams:{a:'ha',b:'teams',ghost:1,arrow:'end',sa:'r',sb:'l',oa:.35,ob:-.2,k:260},
+  g_ola_teams:{a:'ola',b:'teams',ghost:1,arrow:'end',sa:'r',sb:'l',oa:.3,ob:.2},
+  g_mem_vimeo:{a:'mem',b:'vimeo',ghost:1,arrow:'end',sa:'b',sb:'l'},
+  g_vimeo_ha:{a:'vimeo',b:'ha',ghost:1,arrow:'end',sa:'t',sb:'l',ob:.46,k:140},
+  g_gade_nexus:{a:'gade',b:'nexus',ghost:1,arrow:'both',sa:'t',sb:'l',oa:-.25},
+  g_blink_ola:{a:'blink',b:'ola',ghost:1,arrow:'end',sa:'l',sb:'r',ob:.25}
 };
 
 const PHASES = {
-  1:'Conceptualización de campaña y plan editorial',
-  2:'Creación de contenidos, reutilización, adaptación, producción nueva y empaquetado digital',
-  3:'Distribución y puesta a disposición en plataformas',
-  4:'Consumo en aula, seguimiento y atención a usuarios'
+  1:{s:'Conceptualización',l:'Conceptualización de campaña y plan editorial.'},
+  2:{s:'Creación de contenidos',l:'Creación de contenidos, incluyendo reutilización, adaptación y producción nueva, y empaquetado de producto digital.'},
+  3:{s:'Distribución',l:'Distribución y puesta a disposición en plataformas.'},
+  4:{s:'Consumo en aula',l:'Consumo en aula, seguimiento y atención a los usuarios.'}
 };
 const SEV = {crit:{l:'Crítico',w:3},alto:{l:'Alto',w:2},medio:{l:'Medio',w:1}};
 
@@ -277,7 +280,7 @@ const PAINS = [
   why:'Complejiza y alarga los flujos e incrementa los recursos destinados a su gestión.',
   nodes:['prog','a2r','genially','ha','ola'],ctx:['mem','nexus','gade'],
   steps:[
-   {e:['e_gade_prog','e_prog_ha'],t:'Las programaciones se generan en 1MillionBot a partir del contenido de GADE y llegan a la Herramienta autora sin conexión por API.'},
+   {e:['e_gade_prog','e_prog_mem','e_mem_ha'],t:'Las programaciones se generan en 1MillionBot a partir del contenido de GADE y llegan a la Herramienta autora a través de MEM, sin conexión por API.'},
    {e:['e_gen_ha'],t:'Presentaciones y actividades interactivas se producen en Genially y se incorporan a mano en la Herramienta autora.'},
    {e:['e_nexus_a2r','e_a2r_mem','e_nexus_ha','e_mem_ha'],t:'Traducción y accesibilidad pasan por A2R, fuera del flujo: el resultado vuelve a Nexus o MEM antes de llegar a la HA.'},
    {e:['e_ha_ola'],t:'El producto llega al LMS arrastrando cada paso manual anterior: más tiempo y más recursos de gestión.'}
@@ -287,7 +290,7 @@ const PAINS = [
   why:'Complejiza y alarga los flujos e incrementa los recursos destinados a su gestión.',
   nodes:['a2r','nexus','ha'],ctx:['excel','servidor','dambq'],
   steps:[
-   {e:['g_excel_ha'],t:'Los diamantes se generan a partir de los metadatos de un Excel.'},
+   {e:[],f:['excel','ha'],t:'Los diamantes se generan a partir de los metadatos de un Excel.'},
    {e:['g_serv_dambq','e_dambq_ha'],t:'Los recursos esperan en servidores de recursos antes de entrar en el DAM de la Herramienta autora.'},
    {e:['e_nexus_a2r'],t:'Fotografías e ilustraciones compradas pasan por A2R para incorporar la accesibilidad y se guardan después en Nexus.'},
    {e:['e_nexus_ha'],t:'Solo entonces llegan desde Nexus a la Herramienta autora.'}
@@ -298,9 +301,9 @@ const PAINS = [
   nodes:['ha','ola','powerbi','teams'],ctx:['excel'],
   steps:[
    {e:[],f:['excel'],t:'Subidas de recursos y cargas de metadatos se preparan en hojas Excel.'},
-   {e:['g_excel_ha'],t:'Los datos entran a mano en la Herramienta autora…'},
-   {e:['g_excel_ola'],t:'…y también en el LMS.'},
-   {e:['g_teams_pbi'],t:'Los Excel de seguimiento alojados en Teams alimentan Power BI. Un error de tecleo en origen se propaga a todo lo que depende del fichero.'}
+   {e:[],f:['excel','ha'],t:'Los datos entran a mano en la Herramienta autora…'},
+   {e:[],f:['excel','ola'],t:'…y también en el LMS.'},
+   {e:[],f:['teams','powerbi'],t:'Los Excel de seguimiento alojados en Teams alimentan Power BI. Un error de tecleo en origen se propaga a todo lo que depende del fichero.'}
   ]},
  {id:'p4',t:'Contenido base generado y guardado fuera del ecosistema',sev:'alto',ph:[1,2],
   d:'Los activos base de productos impresos y digitales se generan y archivan fuera del flujo del producto digital: textos en GADE (traducciones vía A2R vuelven a GADE), fotografías en Nexus, ilustraciones entre GADE y Nexus, vídeos con original en MEM y distribución desde Vimeo, audios en MEM y programaciones generadas en OMB que viajan a MEM.',
@@ -330,7 +333,7 @@ const PAINS = [
   steps:[
    {e:['g_ha_teams'],t:'El avance en la generación de recursos se anota a mano en Excel alojados en Teams.'},
    {e:['g_ola_teams'],t:'El montaje de los productos digitales en el LMS, también.'},
-   {e:['g_teams_pbi'],t:'Power BI lee esos Excel: si el fichero se rompe o tiene errores, el informe hereda el fallo.'}
+   {e:[],f:['teams','powerbi'],t:'Power BI lee esos Excel: si el fichero se rompe o tiene errores, el informe hereda el fallo.'}
   ]},
  {id:'p7',t:'Retraso del ecosistema como distribuidor de contenidos de terceros',sev:'medio',ph:[3],
   d:'La acumulación de tareas priorizadas para el año 2 impide acelerar el proceso. Ese año incluso sería arriesgado abandonar BETA, porque el ecosistema aún no estará estabilizado.',
@@ -338,47 +341,62 @@ const PAINS = [
   nodes:['ola','beta','garec'],ctx:['dist','blink'],
   steps:[
    {e:['e_garec_beta','e_dist_beta'],t:'GA Recursos y el distribuidor siguen dependiendo de BETA.'},
-   {e:[],f:['beta','ola'],t:'Las tareas priorizadas para el año 2 impiden acelerar el paso a OLA LMS; abandonar BETA ese año sería arriesgado.'},
+   {e:[],f:['beta','ola'],t:'Las tareas priorizadas para el año 2 impiden acelerar el paso al LMS de OLA; abandonar BETA ese año sería arriesgado.'},
    {e:['g_blink_ola'],t:'Consecuencia: se retrasa la llegada de usuarios desde Blink al LMS.'}
   ]}
 ];
 
+PAINS.sort((a,b)=>SEV[b.sev].w-SEV[a.sev].w); // de mayor a menor criticidad
 const NS='http://www.w3.org/2000/svg';
 const svg=document.getElementById('map');
 const el=(t,a={},p)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e;};
-const label=n=>n.short||n.l.replace(/\n/g,' ');
+const label=n=>n.l.replace(/\n/g,' ');
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const RX=n=>Math.min(n.h/2,22);
 
-function inside(n,x,y){const r=n.h/2,px=Math.abs(x-n.x),py=Math.abs(y-n.y),hw=n.w/2-r;
-  if(px<=hw)return py<=n.h/2; return (px-hw)**2+py**2<=r*r;}
-function boundary(n,tx,ty,pad=6){let lo=0,hi=1;
-  for(let i=0;i<30;i++){const m=(lo+hi)/2;inside(n,n.x+(tx-n.x)*m,n.y+(ty-n.y)*m)?lo=m:hi=m;}
-  const dx=tx-n.x,dy=ty-n.y,L=Math.hypot(dx,dy)||1;
-  return [n.x+dx*lo+dx/L*pad,n.y+dy*lo+dy/L*pad];}
-function arrow(p,from,g){const dx=p[0]-from[0],dy=p[1]-from[1],L=Math.hypot(dx,dy)||1,ux=dx/L,uy=dy/L,len=22,w=11;
+// zona OLA
+const gZ=el('g',{class:'zone'},svg);
+el('rect',{x:ZONE.x,y:ZONE.y,width:ZONE.w,height:ZONE.h,rx:36},gZ);
+el('text',{x:ZONE.x+28,y:ZONE.y+52},gZ).textContent=ZONE.l;
+
+// geometría de conexiones: salen y llegan por el centro de un lado, con curvas suaves
+const DIR={l:[-1,0],r:[1,0],t:[0,-1],b:[0,1]};
+function anchor(n,side,off=0){const g=5;
+  if(side==='l')return [n.x-n.w/2-g,n.y+off*n.h];
+  if(side==='r')return [n.x+n.w/2+g,n.y+off*n.h];
+  if(side==='t')return [n.x+off*n.w,n.y-n.h/2-g];
+  return [n.x+off*n.w,n.y+n.h/2+g];}
+function sides(A,B){const dx=B.x-A.x,dy=B.y-A.y;
+  return Math.abs(dx)>Math.abs(dy)*1.1?(dx>0?['r','l']:['l','r']):(dy>0?['b','t']:['t','b']);}
+function arrowAt(p,d,g){const len=17,w=8,ux=-d[0],uy=-d[1];
   el('polygon',{points:`${p[0]},${p[1]} ${p[0]-ux*len-uy*w},${p[1]-uy*len+ux*w} ${p[0]-ux*len+uy*w},${p[1]-uy*len-ux*w}`},g);}
 
 const gE=el('g',{},svg), gN=el('g',{},svg), gP=el('g',{},svg);
 const edgeEls={}, nodeEls={};
 for(const id in EDGES){const e=EDGES[id],A=NODES[e.a],B=NODES[e.b];
+  const auto=sides(A,B),sa=e.sa||auto[0],sb=e.sb||auto[1];
+  const s=anchor(A,sa,e.oa||0),t=anchor(B,sb,e.ob||0),da=DIR[sa],db=DIR[sb];
+  const dist=Math.hypot(t[0]-s[0],t[1]-s[1]),k=e.k||Math.max(30,Math.min(180,dist*.42));
+  const trimS=e.arrow==='both'?12:0,trimT=e.arrow==='none'?0:12;
+  const s2=[s[0]+da[0]*trimS,s[1]+da[1]*trimS],t2=[t[0]+db[0]*trimT,t[1]+db[1]*trimT];
+  const c1=[s[0]+da[0]*k,s[1]+da[1]*k],c2=[t[0]+db[0]*k,t[1]+db[1]*k];
   const g=el('g',{class:'edge'+(e.dot?' dot':'')+(e.ghost?' ghost':'')+(e.color?' '+e.color:'')},gE);
-  let s,t,d,fromS,fromT;
-  if(e.c1){s=boundary(A,e.c1[0],e.c1[1]);t=boundary(B,e.c2[0],e.c2[1]);d=`M${s} C${e.c1} ${e.c2} ${t}`;fromT=e.c2;fromS=e.c1;}
-  else{s=boundary(A,B.x,B.y);t=boundary(B,A.x,A.y);d=`M${s} L${t}`;fromT=s;fromS=t;}
-  const p=el('path',{d},g);
-  if(e.arrow!=='none')arrow(t,fromT,g);
-  if(e.arrow==='both')arrow(s,fromS,g);
+  const p=el('path',{d:`M${s2} C${c1} ${c2} ${t2}`},g);
+  if(e.arrow!=='none')arrowAt(t,db,g);
+  if(e.arrow==='both')arrowAt(s,da,g);
   edgeEls[id]={g,p};
 }
-for(const id in NODES){const n=NODES[id];
+for(const id in NODES){const n=NODES[id],rx=RX(n);
   const g=el('g',{class:'node'+(n.big?' big':'')+(n.ghost?' ghost':''),tabindex:n.ghost?-1:0,role:'button','aria-label':label(n),style:`--nc:var(${n.c})`},gN);
-  el('rect',{class:'halo',x:n.x-n.w/2-12,y:n.y-n.h/2-12,width:n.w+24,height:n.h+24,rx:(n.h+24)/2},g);
-  el('rect',{class:'body',x:n.x-n.w/2,y:n.y-n.h/2,width:n.w,height:n.h,rx:n.h/2},g);
-  const lines=n.l.split('\n'),lh=n.fs*1.18,y0=n.y-(lines.length-1)*lh/2+n.fs*0.35;
-  const tx=el('text',{'text-anchor':'middle','font-size':n.fs},g);
+  el('rect',{class:'halo',x:n.x-n.w/2-11,y:n.y-n.h/2-11,width:n.w+22,height:n.h+22,rx:rx+11},g);
+  el('rect',{class:'body',x:n.x-n.w/2,y:n.y-n.h/2,width:n.w,height:n.h,rx},g);
+  el('rect',{class:'cap',x:n.x-n.w*.18,y:n.y-n.h/2+7,width:n.w*.36,height:5,rx:2.5},g);
+  const lines=n.l.split('\n'),lh=FS*1.18,y0=n.y-(lines.length-1)*lh/2+FS*0.36+3;
+  const tx=el('text',{'text-anchor':'middle','font-size':FS},g);
   lines.forEach((l,i)=>{const ts=el('tspan',{x:n.x,y:y0+i*lh},tx);ts.textContent=l;});
   const b=el('g',{class:'badge'},g);
-  const bx=n.x+n.w/2-n.h*0.18,by=n.y-n.h/2+4;
-  el('circle',{cx:bx,cy:by,r:19},b);const bt=el('text',{x:bx,y:by+7.5,'text-anchor':'middle'},b);
+  const bx=n.x+n.w/2-10,by=n.y-n.h/2-2;
+  el('rect',{x:bx-17,y:by-15,width:34,height:30,rx:15},b);const bt=el('text',{x:bx,y:by+7,'text-anchor':'middle'},b);
   nodeEls[id]={g,bt,b};
   if(!n.ghost){g.addEventListener('click',()=>toggleNode(id));
     g.addEventListener('keydown',ev=>{if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();toggleNode(id);}});}
@@ -386,21 +404,26 @@ for(const id in NODES){const n=NODES[id];
 
 // ---- estado
 const S={mode:'dolor',sel:null,step:-1,phase:null,node:null,playing:false,timer:null};
-try{const h=location.hash.slice(1);if(PAINS.some(p=>p.id===h))S.sel=h;}catch(e){}
+try{const h=location.hash.slice(1);if(PAINS.some(p=>p.id===h))S.sel=h;else if(/^fase[1-4]$/.test(h))S.phase=+h.slice(4);}catch(e){}
 
-const visible=()=>PAINS.filter(p=>(!S.phase||p.ph.includes(S.phase))&&(!S.node||p.nodes.includes(S.node)||p.ctx.includes(S.node)));
+const inPhase=p=>!S.phase||p.ph.includes(S.phase);
+const visible=()=>PAINS.filter(p=>inPhase(p)&&(!S.node||p.nodes.includes(S.node)||p.ctx.includes(S.node)));
 const pain=()=>PAINS.find(p=>p.id===S.sel);
 
-// resumen
-const sum=document.getElementById('summary');
-['crit','alto','medio'].forEach(k=>{const c=PAINS.filter(p=>p.sev===k).length;
-  const s=document.createElement('span');s.className='pill sev-'+k;s.innerHTML=`<span class="dot"></span>${c} ${SEV[k].l.toLowerCase()}${c>1?'s':''}`;sum.appendChild(s);});
-
-// fases
-const ph=document.getElementById('phases');
-const mkPh=(v,t,title)=>{const b=document.createElement('button');b.textContent=t;b.title=title||'';b.setAttribute('aria-pressed',String(S.phase===v));
-  b.onclick=()=>{S.phase=v;if(S.sel&&!visible().some(p=>p.id===S.sel))select(null);render();};ph.appendChild(b);};
-function renderPhases(){ph.innerHTML='<span class="eyebrow" style="margin-right:4px">Fase</span>';mkPh(null,'Todas');[1,2,3,4].forEach(i=>mkPh(i,String(i),PHASES[i]));}
+// pestañas de fase
+const tabs=document.getElementById('tabs');
+function renderTabs(){tabs.innerHTML='';
+  [null,1,2,3,4].forEach(v=>{const b=document.createElement('button');b.className='tab';b.setAttribute('role','tab');
+    b.setAttribute('aria-selected',String(S.phase===v));b.tabIndex=S.phase===v?0:-1;
+    const n=v?PAINS.filter(p=>p.ph.includes(v)).length:PAINS.length;
+    b.innerHTML=v?`<span class="k">${v}</span>${PHASES[v].s}<span class="n">${n}</span>`:`Todas las fases<span class="n">${n}</span>`;
+    b.onclick=()=>setPhase(v);
+    b.onkeydown=e=>{const order=[null,1,2,3,4],i=order.indexOf(S.phase);
+      if(e.key==='ArrowRight'){e.preventDefault();e.stopPropagation();setPhase(order[(i+1)%5]);tabs.querySelector('[aria-selected="true"]').focus();}
+      if(e.key==='ArrowLeft'){e.preventDefault();e.stopPropagation();setPhase(order[(i+4)%5]);tabs.querySelector('[aria-selected="true"]').focus();}};
+    tabs.appendChild(b);});
+  document.getElementById('phasedesc').textContent=S.phase?PHASES[S.phase].l:'';}
+function setPhase(v){S.phase=v;if(S.sel&&!visible().some(p=>p.id===S.sel))select(null);render();}
 
 document.getElementById('m-dolor').onclick=()=>{S.mode='dolor';render();};
 document.getElementById('m-calor').onclick=()=>{S.mode='calor';stop();render();};
@@ -415,7 +438,10 @@ function play(){const p=pain();if(!p)return;S.playing=true;
     if(S.step<p.steps.length-1)S.timer=setTimeout(tick,3200);else{S.playing=false;render();}};
   tick();}
 
-// ---- render
+function chips(ids,ctx){return ids.map(n=>`<span class="chip${ctx?' ctx':''}" style="--nc:var(${NODES[n].c})">${esc(label(NODES[n]))}</span>`).join('');}
+const CHEV='<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 5l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+// ---- lista desplegable
 function renderCards(){
   const list=visible(),box=document.getElementById('cards');box.innerHTML='';
   document.getElementById('listcount').textContent=`${list.length} de ${PAINS.length} puntos de dolor`;
@@ -423,13 +449,41 @@ function renderCards(){
   if(S.node){const c=document.createElement('span');c.className='nodechip';c.textContent=label(NODES[S.node]);
     const x=document.createElement('button');x.textContent='×';x.setAttribute('aria-label','Quitar filtro');x.onclick=()=>{S.node=null;render();};c.appendChild(x);nf.appendChild(c);}
   if(!list.length){const e=document.createElement('div');e.className='empty';
-    e.textContent=S.phase===4&&!S.node?'El documento todavía no recoge puntos de dolor para la fase 4 (consumo en aula, seguimiento y atención a usuarios).':'Ningún punto de dolor coincide con este filtro.';box.appendChild(e);return;}
-  list.forEach(p=>{const b=document.createElement('button');b.className='card sev-'+p.sev;b.setAttribute('aria-pressed',String(S.sel===p.id));
-    b.innerHTML=`<span class="stripe"></span><span class="t"></span><span class="meta"><span class="sevtag">${SEV[p.sev].l}</span>${p.ph.map(f=>`<span class="tag">Fase ${f}</span>`).join('')}<span class="tag">${p.nodes.length} elem.</span></span>`;
-    b.querySelector('.t').textContent=p.t;
-    b.onclick=()=>{select(S.sel===p.id?null:p.id);render();};box.appendChild(b);});
+    e.textContent=S.phase===4&&!S.node?'El documento todavía no recoge puntos de dolor para la fase 4.':'Ningún punto de dolor coincide con este filtro.';box.appendChild(e);return;}
+  list.forEach(p=>{const open=S.sel===p.id&&S.mode==='dolor';
+    const card=document.createElement('div');card.className='card sev-'+p.sev+(open?' open':'');
+    card.innerHTML=`<button class="card-head" aria-expanded="${open}" aria-controls="body-${p.id}">
+        <span class="t">${esc(p.t)}</span><span class="chev">${CHEV}</span>
+        <span class="meta"><span class="sevtag">${SEV[p.sev].l}</span>${p.ph.map(f=>`<span class="tag">Fase ${f}</span>`).join('')}<span class="tag">${p.nodes.length} elem.</span></span>
+      </button>`;
+    card.querySelector('.card-head').onclick=()=>{select(open?null:p.id);render();if(!open)requestAnimationFrame(()=>{const c=document.querySelector('.card.open');if(c&&c.getBoundingClientRect().top<0)c.scrollIntoView({block:'start',behavior:'smooth'});});};
+    if(open)card.appendChild(cardBody(p));
+    box.appendChild(card);});
 }
 
+function cardBody(p){
+  const b=document.createElement('div');b.className='card-body';b.id='body-'+p.id;
+  b.innerHTML=`<h3>Descripción</h3><p>${esc(p.d)}</p>
+    <h3>Por qué es un problema</h3><p class="why">${esc(p.why)}</p>
+    <h3>Elementos implicados</h3><div class="chips">${chips(p.nodes)}</div>
+    ${p.ctx.length?`<h3>Contexto del flujo</h3><div class="chips">${chips(p.ctx,1)}</div>`:''}
+    <div class="player">
+      <div class="ctrls">
+        <button class="primary" data-a="pl">${S.playing?'Pausar':(S.step>=p.steps.length-1?'Repetir':'Reproducir flujo')}</button>
+        <button data-a="pv" ${S.step<0?'disabled':''} aria-label="Paso anterior">‹</button>
+        <button data-a="nx" ${S.step>=p.steps.length-1?'disabled':''} aria-label="Paso siguiente">›</button>
+        <button data-a="ov" ${S.step<0?'disabled':''}>Vista general</button>
+      </div>
+      <div class="eyebrow">${S.step<0?'Vista general · '+p.steps.length+' pasos':'Paso '+(S.step+1)+' de '+p.steps.length}</div>
+      <ol class="steps">${p.steps.map((s,i)=>`<li tabindex="0" class="${i===S.step?'cur':''}">${esc(s.t)}</li>`).join('')}</ol>
+    </div>`;
+  b.querySelectorAll('.steps li').forEach((li,i)=>{const go=()=>{stop();S.step=i;render();};li.onclick=go;li.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}};});
+  const A={pl:()=>{S.playing?stop():play();},pv:()=>{stop();S.step=Math.max(-1,S.step-1);},nx:()=>{stop();S.step=Math.min(p.steps.length-1,S.step+1);},ov:()=>{stop();S.step=-1;}};
+  b.querySelectorAll('[data-a]').forEach(x=>x.onclick=()=>{A[x.dataset.a]();render();});
+  return b;
+}
+
+// ---- esquema
 function renderMap(){
   const p=S.mode==='dolor'?pain():null;
   svg.setAttribute('class',(p?'sel sev-'+p.sev:'')+(S.mode==='calor'?' heat':'')+(S.node?' focusnode':''));
@@ -437,8 +491,7 @@ function renderMap(){
   if(p){p.steps.forEach(s=>s.e.forEach(x=>allE.add(x)));
     const cur=p.steps[S.step];if(cur){cur.e.forEach(x=>{stepE.add(x);stepN.add(EDGES[x].a);stepN.add(EDGES[x].b);});(cur.f||[]).forEach(n=>stepN.add(n));}}
   for(const id in edgeEls){const g=edgeEls[id].g;g.classList.toggle('on',allE.has(id));g.classList.toggle('flow',stepE.has(id));}
-  // conteo / calor
-  const vis=S.mode==='calor'?PAINS.filter(q=>!S.phase||q.ph.includes(S.phase)):visible();
+  const vis=S.mode==='calor'?PAINS.filter(inPhase):visible();
   const score={},count={};
   vis.forEach(q=>q.nodes.forEach(n=>{score[n]=(score[n]||0)+SEV[q.sev].w;count[n]=(count[n]||0)+1;}));
   const max=Math.max(1,...Object.values(score));
@@ -457,76 +510,36 @@ function renderMap(){
   startPulses([...stepE]);
 }
 
-// partículas que recorren los conectores del paso activo
 let raf=null,pulses=[];
 function startPulses(ids){cancelAnimationFrame(raf);gP.innerHTML='';pulses=[];
   if(!ids.length||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   ids.forEach(id=>{const e=EDGES[id],path=edgeEls[id].p,L=path.getTotalLength();
-    for(let k=0;k<2;k++){const c=el('circle',{r:11,class:'pulse'},gP);pulses.push({c,path,L,off:k*0.5,both:e.arrow==='both'});}});
+    for(let k=0;k<2;k++){const c=el('circle',{r:9,class:'pulse'},gP);pulses.push({c,path,L,off:k*0.5,both:e.arrow==='both'});}});
   const t0=performance.now();
   const loop=now=>{const t=((now-t0)/1600)%1;
     pulses.forEach(q=>{let u=(t+q.off)%1;if(q.both&&q.off)u=1-u;const pt=q.path.getPointAtLength(u*q.L);q.c.setAttribute('cx',pt.x);q.c.setAttribute('cy',pt.y);q.c.setAttribute('opacity',Math.sin(u*Math.PI).toFixed(2));});
     raf=requestAnimationFrame(loop);};
   raf=requestAnimationFrame(loop);}
 
-function chips(ids,ctx){return ids.map(n=>`<span class="chip${ctx?' ctx':''}" style="--nc:var(${NODES[n].c})">${label(NODES[n])}</span>`).join('');}
-
-function renderDetail(){
-  const d=document.getElementById('detail');d.className='detail';
-  if(S.mode==='calor'){
-    const vis=PAINS.filter(q=>!S.phase||q.ph.includes(S.phase));const rows={};
-    vis.forEach(q=>q.nodes.forEach(n=>{rows[n]=rows[n]||{s:0,list:[]};rows[n].s+=SEV[q.sev].w;rows[n].list.push(q);}));
-    const arr=Object.entries(rows).sort((a,b)=>b[1].s-a[1].s);const max=arr.length?arr[0][1].s:1;
-    d.innerHTML=`<div><div class="eyebrow">Mapa de calor${S.phase?' · fase '+S.phase:''}</div><h2>Dónde se concentra el dolor</h2>
-      <p>Cada elemento suma el peso de los puntos de dolor que lo implican: crítico 3, alto 2, medio 1. El número sobre cada nodo es esa puntuación. Pulsa una fila para filtrar la lista por ese elemento.</p>
-      <p class="note" style="margin-top:10px">Solo cuentan los elementos que el documento señala como implicados; los de contexto no suman.</p></div>
-      <div style="overflow-x:auto">${arr.length?`<table class="rank"><thead><tr><th>Elemento</th><th>Puntos</th><th>Peso</th><th class="barc"></th></tr></thead><tbody>
-      ${arr.map(([n,r])=>`<tr data-n="${n}"><td><span class="chip" style="--nc:var(${NODES[n].c})">${label(NODES[n])}</span></td><td>${r.list.length}</td><td><b>${r.s}</b></td><td class="barc"><div class="b" style="width:${r.s/max*100}%"></div></td></tr>`).join('')}
-      </tbody></table>`:'<div class="empty">No hay puntos de dolor en esta fase.</div>'}</div>`;
-    d.querySelectorAll('tr[data-n]').forEach(tr=>tr.onclick=()=>{S.node=tr.dataset.n;S.mode='dolor';render();});
-    return;}
-  const p=pain();
-  if(!p){
-    d.innerHTML=`<div><div class="eyebrow">Cómo usarlo</div><h2>Selecciona un punto de dolor</h2>
-      <p>El esquema atenúa todo lo que no interviene y resalta, con el color de su impacto, los elementos que el documento señala. Los elementos de contexto aparecen con borde discontinuo; los que no están en el esquema original (Excel, Power BI, Vimeo, Blink…) se añaden en gris solo cuando hacen falta.</p>
-      <p style="margin-top:10px">Pulsa <b>Reproducir</b> para recorrer el flujo paso a paso. Al hacer clic en un nodo del esquema, la lista se filtra por los puntos de dolor que lo afectan; el número sobre cada nodo indica cuántos son.</p></div>
-      <div><h3>Fases del proceso</h3><ol style="margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px">${[1,2,3,4].map(i=>`<li>${PHASES[i]} <span class="note">· ${PAINS.filter(q=>q.ph.includes(i)).length} puntos</span></li>`).join('')}</ol></div>`;
-    return;}
-  d.classList.add('sev-'+p.sev);
-  const lvl=SEV[p.sev].w;
-  d.innerHTML=`<div>
-      <div class="sevbig"><span class="bar">${[1,2,3].map(i=>`<i class="${i<=lvl?'on':''}"></i>`).join('')}</span>Impacto ${SEV[p.sev].l.toLowerCase()}</div>
-      <h2></h2>
-      <div class="chips" style="margin-bottom:6px">${p.ph.map(f=>`<span class="tag" title="${PHASES[f]}">Fase ${f} · ${PHASES[f]}</span>`).join('')}</div>
-      <h3>Descripción</h3><p class="dd"></p>
-      <h3>Por qué es un problema</h3><p class="dw"></p>
-      <h3>Elementos implicados</h3><div class="chips">${chips(p.nodes)}</div>
-      ${p.ctx.length?`<h3>Contexto del flujo</h3><div class="chips">${chips(p.ctx,1)}</div>`:''}
-    </div>
-    <div class="player">
-      <div class="ctrls">
-        <button class="primary" id="pl">${S.playing?'Pausar':(S.step>=p.steps.length-1?'Repetir':'Reproducir')}</button>
-        <button id="pv" ${S.step<0?'disabled':''} aria-label="Paso anterior">‹ Anterior</button>
-        <button id="nx" ${S.step>=p.steps.length-1?'disabled':''} aria-label="Paso siguiente">Siguiente ›</button>
-        <button id="ov" ${S.step<0?'disabled':''}>Vista general</button>
-      </div>
-      <div class="eyebrow">${S.step<0?'Vista general · '+p.steps.length+' pasos':'Paso '+(S.step+1)+' de '+p.steps.length}</div>
-      <ol class="steps">${p.steps.map((s,i)=>`<li tabindex="0" data-i="${i}" class="${i===S.step?'cur':''}"></li>`).join('')}</ol>
-    </div>`;
-  d.querySelector('h2').textContent=p.t;d.querySelector('.dd').textContent=p.d;d.querySelector('.dw').textContent=p.why;
-  d.querySelectorAll('.steps li').forEach((li,i)=>{li.append(document.createTextNode(p.steps[i].t));const go=()=>{stop();S.step=i;render();};li.onclick=go;li.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}};});
-  d.querySelector('#pl').onclick=()=>{S.playing?stop():play();render();};
-  d.querySelector('#pv').onclick=()=>{stop();S.step=Math.max(-1,S.step-1);render();};
-  d.querySelector('#nx').onclick=()=>{stop();S.step=Math.min(p.steps.length-1,S.step+1);render();};
-  d.querySelector('#ov').onclick=()=>{stop();S.step=-1;render();};
+// ---- ranking del mapa de calor
+function renderRank(){
+  const r=document.getElementById('rank');r.hidden=S.mode!=='calor';if(r.hidden)return;
+  const rows={};PAINS.filter(inPhase).forEach(q=>q.nodes.forEach(n=>{rows[n]=rows[n]||{s:0,c:0};rows[n].s+=SEV[q.sev].w;rows[n].c++;}));
+  const arr=Object.entries(rows).sort((a,b)=>b[1].s-a[1].s);const max=arr.length?arr[0][1].s:1;
+  r.innerHTML=`<h2>Dónde se concentra el dolor${S.phase?' · fase '+S.phase:''}</h2>
+    <p>Cada elemento suma el peso de los puntos de dolor que lo implican: crítico 3, alto 2, medio 1. Solo cuentan los elementos implicados según el documento.</p>
+    <div class="rankwrap">${arr.length?`<table class="rank"><thead><tr><th>Elemento</th><th>Puntos</th><th>Peso</th><th class="barc"></th></tr></thead><tbody>
+    ${arr.map(([n,v])=>`<tr data-n="${n}"><td><span class="chip" style="--nc:var(${NODES[n].c})">${esc(label(NODES[n]))}</span></td><td>${v.c}</td><td><b>${v.s}</b></td><td class="barc"><div class="b" style="width:${v.s/max*100}%"></div></td></tr>`).join('')}
+    </tbody></table>`:'<div class="empty">No hay puntos de dolor en esta fase.</div>'}</div>`;
+  r.querySelectorAll('tr[data-n]').forEach(tr=>tr.onclick=()=>{S.node=tr.dataset.n;S.mode='dolor';render();});
 }
 
 function render(){
   document.getElementById('m-dolor').setAttribute('aria-pressed',String(S.mode==='dolor'));
   document.getElementById('m-calor').setAttribute('aria-pressed',String(S.mode==='calor'));
-  renderPhases();renderCards();renderMap();renderDetail();
+  renderTabs();renderCards();renderMap();renderRank();
 }
-document.addEventListener('keydown',e=>{const p=pain();if(!p||S.mode!=='dolor'||/INPUT|TEXTAREA/.test(e.target.tagName))return;
+document.addEventListener('keydown',e=>{const p=pain();if(!p||S.mode!=='dolor'||e.target.closest('.tabs'))return;
   if(e.key==='ArrowRight'){stop();S.step=Math.min(p.steps.length-1,S.step+1);render();}
   if(e.key==='ArrowLeft'){stop();S.step=Math.max(-1,S.step-1);render();}
   if(e.key==='Escape'){select(null);render();}});
